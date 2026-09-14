@@ -76,6 +76,16 @@ export function useMyKharcha() {
     setForm({ date, category: 'Grocery', amount: '', description: '' })
     setIsAddOpen(true)
   }
+
+  useEffect(() => {
+    const handleOpenAdd = (event) => {
+      const date = event.detail?.date || selectedDate
+      openAdd(date)
+    }
+    window.addEventListener('open-add-expense', handleOpenAdd)
+    return () => window.removeEventListener('open-add-expense', handleOpenAdd)
+  }, [selectedDate])
+
   const addExpense = (event) => {
     event.preventDefault()
     if (!form.amount || Number(form.amount) <= 0) return

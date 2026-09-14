@@ -285,15 +285,6 @@ export default function Dashboard() {
         </Card>
       </div>
 
-      {/* Floating Mobile Add Button */}
-      <Button
-        className="fixed bottom-20 right-5 z-20 size-12 rounded-full bg-gradient-to-br from-amber-500 to-amber-700 p-0 text-slate-950 font-bold shadow-lg shadow-amber-600/40 md:hidden hover:from-amber-400 hover:to-amber-600"
-        onClick={() => openAdd()}
-        size="icon"
-      >
-        <Plus size={24} className="text-white" />
-      </Button>
-
       {/* Add Expense Shadcn Dialog */}
       <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
         <DialogContent className="sm:max-w-md border-emerald-950/20 dark:border-emerald-800/40 dark:bg-[#0c241b]">

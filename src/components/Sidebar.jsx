@@ -1,5 +1,5 @@
-import { ArrowUpRight, BarChart3, CalendarDays, Ellipsis, LayoutDashboard, LogOut, Settings2, Sparkles, TrendingUp, User, WalletCards } from 'lucide-react'
-import { NavLink } from 'react-router-dom'
+import { ArrowUpRight, BarChart3, CalendarDays, Ellipsis, LayoutDashboard, LogOut, Moon, MoreHorizontal, Plus, Settings2, Sparkles, Sun, TrendingUp, User, WalletCards } from 'lucide-react'
+import { NavLink, useLocation } from 'react-router-dom'
 import { Avatar, AvatarFallback } from '@/ui/avatar'
 import {
   DropdownMenu,
@@ -10,8 +10,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/ui/dropdown-menu'
+import { useMyKharcha } from '../hooks/useMyKharcha'
 
-const menu = [
+const desktopMenu = [
   { label: 'Home', path: '/', icon: LayoutDashboard },
   { label: 'Calendar', path: '/calendar', icon: CalendarDays },
   { label: 'Expenses', path: '/expenses', icon: BarChart3 },
@@ -21,6 +22,15 @@ const menu = [
 ]
 
 export default function Sidebar() {
+  const { pathname } = useLocation()
+  const { isDark, setIsDark } = useMyKharcha()
+
+  const handleQuickAdd = () => {
+    window.dispatchEvent(new CustomEvent('open-add-expense'))
+  }
+
+  const isMoreActive = ['/summary', '/history', '/settings'].includes(pathname)
+
   return (
     <>
       {/* Desktop Fixed Sidebar */}
@@ -47,7 +57,7 @@ export default function Sidebar() {
 
         {/* Navigation */}
         <nav className="flex flex-col gap-1">
-          {menu.map(({ label, path, icon: Icon }) => (
+          {desktopMenu.map(({ label, path, icon: Icon }) => (
             <NavLink
               to={path}
               end={path === '/'}
@@ -103,26 +113,146 @@ export default function Sidebar() {
         </div>
       </aside>
 
-      {/* Mobile Fixed Bottom Navigation */}
-      <nav className="fixed inset-x-0 bottom-0 z-30 flex h-16 items-center justify-around border-t border-emerald-900/15 bg-white/95 px-2 backdrop-blur md:hidden dark:border-emerald-900/40 dark:bg-[#071711]/95">
-        {menu.map(({ label, path, icon: Icon }) => (
+      {/* Ultra-Modern Floating Island Mobile Navigation Dock */}
+      <div className="fixed bottom-4 inset-x-4 max-w-[380px] mx-auto z-40 md:hidden select-none">
+        <nav className="relative flex items-center justify-between px-3.5 py-2 rounded-full bg-white/95 dark:bg-[#081f17]/95 backdrop-blur-2xl border border-emerald-950/15 dark:border-amber-500/25 shadow-[0_14px_38px_rgba(4,26,19,0.22)] dark:shadow-[0_16px_45px_rgba(0,0,0,0.7)]">
+          {/* Tab 1: Home */}
           <NavLink
-            to={path}
-            end={path === '/'}
-            key={label}
+            to="/"
+            end
+            aria-label="Home"
             className={({ isActive }) =>
-              `flex flex-col items-center justify-center gap-1 rounded-lg px-2 py-1 text-[10px] font-medium transition-colors ${
+              `relative flex w-11 h-11 shrink-0 aspect-square items-center justify-center rounded-full transition-all duration-200 ${
                 isActive
-                  ? 'text-emerald-800 font-bold dark:text-amber-300'
-                  : 'text-slate-400 hover:text-emerald-900 dark:hover:text-amber-200'
+                  ? 'text-amber-300 font-bold bg-emerald-900 dark:bg-emerald-900/90 shadow-md shadow-emerald-950/20 scale-105'
+                  : 'text-slate-500 hover:text-emerald-900 dark:text-emerald-200/60 dark:hover:text-amber-200 hover:bg-emerald-50/80 dark:hover:bg-emerald-950/40'
               }`
             }
           >
-            <Icon size={18} />
-            <span>{label}</span>
+            {({ isActive }) => (
+              <LayoutDashboard size={20} className={isActive ? 'text-amber-300' : ''} />
+            )}
           </NavLink>
-        ))}
-      </nav>
+
+          {/* Tab 2: Calendar */}
+          <NavLink
+            to="/calendar"
+            aria-label="Calendar"
+            className={({ isActive }) =>
+              `relative flex w-11 h-11 shrink-0 aspect-square items-center justify-center rounded-full transition-all duration-200 ${
+                isActive
+                  ? 'text-amber-300 font-bold bg-emerald-900 dark:bg-emerald-900/90 shadow-md shadow-emerald-950/20 scale-105'
+                  : 'text-slate-500 hover:text-emerald-900 dark:text-emerald-200/60 dark:hover:text-amber-200 hover:bg-emerald-50/80 dark:hover:bg-emerald-950/40'
+              }`
+            }
+          >
+            {({ isActive }) => (
+              <CalendarDays size={20} className={isActive ? 'text-amber-300' : ''} />
+            )}
+          </NavLink>
+
+          {/* Center Elevated Action Button: Quick Add Expense */}
+          <div className="relative -translate-y-4 px-1 shrink-0">
+            <button
+              type="button"
+              onClick={handleQuickAdd}
+              aria-label="Quick Add Expense"
+              className="group relative flex w-13 h-13 shrink-0 aspect-square items-center justify-center rounded-full bg-gradient-to-tr from-amber-600 via-amber-500 to-yellow-300 text-slate-950 shadow-[0_8px_20px_rgba(217,119,6,0.45)] ring-4 ring-[#f6f9f7] dark:ring-[#05140f] active:scale-90 hover:scale-105 transition-all duration-200 cursor-pointer"
+            >
+              <div className="absolute inset-0 rounded-full bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <Plus size={26} strokeWidth={2.5} className="text-slate-950 group-hover:rotate-90 transition-transform duration-300" />
+            </button>
+          </div>
+
+          {/* Tab 4: Expenses */}
+          <NavLink
+            to="/expenses"
+            aria-label="Expenses"
+            className={({ isActive }) =>
+              `relative flex w-11 h-11 shrink-0 aspect-square items-center justify-center rounded-full transition-all duration-200 ${
+                isActive
+                  ? 'text-amber-300 font-bold bg-emerald-900 dark:bg-emerald-900/90 shadow-md shadow-emerald-950/20 scale-105'
+                  : 'text-slate-500 hover:text-emerald-900 dark:text-emerald-200/60 dark:hover:text-amber-200 hover:bg-emerald-50/80 dark:hover:bg-emerald-950/40'
+              }`
+            }
+          >
+            {({ isActive }) => (
+              <BarChart3 size={20} className={isActive ? 'text-amber-300' : ''} />
+            )}
+          </NavLink>
+
+          {/* Tab 5: More (Summary, History, Settings) */}
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              aria-label="More"
+              className={`relative flex w-11 h-11 shrink-0 aspect-square items-center justify-center rounded-full transition-all duration-200 outline-none ${
+                isMoreActive
+                  ? 'text-amber-300 font-bold bg-emerald-900 dark:bg-emerald-900/90 shadow-md shadow-emerald-950/20 scale-105'
+                  : 'text-slate-500 hover:text-emerald-900 dark:text-emerald-200/60 dark:hover:text-amber-200 hover:bg-emerald-50/80 dark:hover:bg-emerald-950/40'
+              }`}
+            >
+              <MoreHorizontal size={20} className={isMoreActive ? 'text-amber-300' : ''} />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align="end"
+              side="top"
+              sideOffset={12}
+              className="w-48 border-emerald-950/20 dark:border-emerald-800/40 dark:bg-[#0c241b] mb-2 p-1.5 rounded-2xl shadow-2xl"
+            >
+              <DropdownMenuGroup>
+                <DropdownMenuLabel className="text-[11px] font-bold text-emerald-900 dark:text-amber-200">
+                  Analytics & Workspace
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator className="bg-emerald-100 dark:bg-emerald-900/50" />
+                <DropdownMenuItem asChild>
+                  <NavLink
+                    to="/summary"
+                    className="flex w-full items-center gap-2.5 px-2.5 py-2 text-xs font-medium rounded-lg text-emerald-950 dark:text-amber-100 hover:bg-emerald-50 dark:hover:bg-emerald-900/40"
+                  >
+                    <TrendingUp size={16} className="text-amber-500" />
+                    <span>Monthly Summary</span>
+                  </NavLink>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <NavLink
+                    to="/history"
+                    className="flex w-full items-center gap-2.5 px-2.5 py-2 text-xs font-medium rounded-lg text-emerald-950 dark:text-amber-100 hover:bg-emerald-50 dark:hover:bg-emerald-900/40"
+                  >
+                    <ArrowUpRight size={16} className="text-amber-500" />
+                    <span>Spending History</span>
+                  </NavLink>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <NavLink
+                    to="/settings"
+                    className="flex w-full items-center gap-2.5 px-2.5 py-2 text-xs font-medium rounded-lg text-emerald-950 dark:text-amber-100 hover:bg-emerald-50 dark:hover:bg-emerald-900/40"
+                  >
+                    <Settings2 size={16} className="text-amber-500" />
+                    <span>Settings & Budget</span>
+                  </NavLink>
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator className="bg-emerald-100 dark:bg-emerald-900/50" />
+              <DropdownMenuItem
+                onClick={() => setIsDark(!isDark)}
+                className="flex items-center gap-2.5 px-2.5 py-2 text-xs font-medium rounded-lg text-emerald-950 dark:text-amber-100 hover:bg-emerald-50 dark:hover:bg-emerald-900/40 cursor-pointer"
+              >
+                {isDark ? (
+                  <>
+                    <Sun size={16} className="text-amber-400" />
+                    <span>Light Mode</span>
+                  </>
+                ) : (
+                  <>
+                    <Moon size={16} className="text-emerald-700" />
+                    <span>Dark Mode</span>
+                  </>
+                )}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </nav>
+      </div>
     </>
   )
 }
