@@ -54,7 +54,7 @@ export default function Settings() {
                   setValue(event.target.value)
                   setSaved(false)
                 }}
-                className="bg-white dark:bg-[#071711] border-emerald-950/20 dark:border-emerald-800/40 text-emerald-950 dark:text-amber-100 font-bold"
+                className="h-11 px-4 py-2.5 bg-white dark:bg-[#071711] border-emerald-950/20 dark:border-emerald-800/40 text-emerald-950 dark:text-amber-100 font-bold text-sm"
               />
             </label>
 
@@ -62,17 +62,17 @@ export default function Settings() {
               type="submit"
               className={
                 saved
-                  ? 'bg-emerald-700 hover:bg-emerald-600 text-white font-semibold'
-                  : 'bg-emerald-900 hover:bg-emerald-800 text-amber-200 border border-amber-400/30 font-semibold shadow-md shadow-emerald-950/20'
+                  ? 'h-11 px-6 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-semibold text-sm shadow-md transition-all'
+                  : 'h-11 px-6 py-2.5 rounded-xl bg-emerald-900 hover:bg-emerald-800 text-amber-200 border border-amber-400/30 font-semibold text-sm shadow-md shadow-emerald-950/20 transition-all hover:scale-[1.02]'
               }
             >
               {saved ? (
                 <>
-                  <Check size={16} className="mr-1.5 text-amber-300" /> Saved!
+                  <Check size={17} className="mr-1.5 text-amber-300" /> Saved!
                 </>
               ) : (
                 <>
-                  <Save size={16} className="mr-1.5 text-amber-300" /> Save budget
+                  <Save size={17} className="mr-1.5 text-amber-300" /> Save budget
                 </>
               )}
             </Button>
@@ -107,12 +107,12 @@ export default function Settings() {
               variant={!isDark ? 'default' : 'outline'}
               className={
                 !isDark
-                  ? 'bg-emerald-900 hover:bg-emerald-800 text-amber-200 border border-amber-400/30 font-semibold'
-                  : 'border-emerald-900/20 dark:border-emerald-800/40 text-emerald-900 dark:text-amber-200'
+                  ? 'h-11 px-5 py-2.5 rounded-xl bg-emerald-900 hover:bg-emerald-800 text-amber-200 border border-amber-400/30 font-semibold text-sm shadow-md'
+                  : 'h-11 px-5 py-2.5 rounded-xl border-emerald-900/20 dark:border-emerald-800/40 text-emerald-900 dark:text-amber-200 text-sm'
               }
               onClick={() => setIsDark(false)}
             >
-              <Sun size={17} className="mr-1.5 text-amber-500" />
+              <Sun size={18} className="mr-1.5 text-amber-500" />
               Light theme
             </Button>
 
@@ -120,12 +120,12 @@ export default function Settings() {
               variant={isDark ? 'default' : 'outline'}
               className={
                 isDark
-                  ? 'bg-emerald-900 hover:bg-emerald-800 text-amber-200 border border-amber-400/30 font-semibold'
-                  : 'border-emerald-900/20 dark:border-emerald-800/40 text-emerald-900 dark:text-amber-200'
+                  ? 'h-11 px-5 py-2.5 rounded-xl bg-emerald-900 hover:bg-emerald-800 text-amber-200 border border-amber-400/30 font-semibold text-sm shadow-md'
+                  : 'h-11 px-5 py-2.5 rounded-xl border-emerald-900/20 dark:border-emerald-800/40 text-emerald-900 dark:text-amber-200 text-sm'
               }
               onClick={() => setIsDark(true)}
             >
-              <Moon size={17} className="mr-1.5 text-amber-300" />
+              <Moon size={18} className="mr-1.5 text-amber-300" />
               Dark theme
             </Button>
           </div>

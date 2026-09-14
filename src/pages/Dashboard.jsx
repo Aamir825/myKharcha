@@ -1,17 +1,9 @@
-import { ArrowDownRight, CalendarDays, ChevronLeft, ChevronRight, Ellipsis, Plus, Search, Trash2, WalletCards } from 'lucide-react'
+import { ArrowDownRight, CalendarDays, ChevronLeft, ChevronRight, Ellipsis, Pencil, Plus, Search, Trash2, WalletCards } from 'lucide-react'
 import { money, useMyKharcha } from '../hooks/useMyKharcha'
 import { Button } from '@/ui/button'
 import { Card } from '@/ui/card'
-import { Input } from '@/ui/input'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/ui/select'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/ui/dialog'
+import ExpenseDialog from '../components/ExpenseDialog'
+import DeleteConfirmDialog from '../components/DeleteConfirmDialog'
 
 const monthLabel = (date) =>
   date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
@@ -36,14 +28,18 @@ export default function Dashboard() {
     remainingDays,
     dailySafeSpend,
     isAddOpen,
-    form,
-    setForm,
+    editingExpense,
+    deletingExpense,
+    isDeleteOpen,
     setSelectedDate,
     setIsAddOpen,
+    setIsDeleteOpen,
     changeMonth,
     openAdd,
-    addExpense,
-    deleteExpense,
+    openEdit,
+    openDelete,
+    saveExpense,
+    confirmDelete,
   } = useMyKharcha()
 
   return (
@@ -60,10 +56,10 @@ export default function Dashboard() {
           </p>
         </div>
         <Button
-          onClick={() => openAdd()}
-          className="bg-emerald-900 hover:bg-emerald-800 text-amber-200 border border-amber-400/30 shadow-md shadow-emerald-950/20 font-semibold"
+          onClick={() => openAdd(selectedDate)}
+          className="h-11 px-5 py-2.5 bg-emerald-900 hover:bg-emerald-800 text-amber-200 border border-amber-400/30 shadow-md shadow-emerald-950/20 font-semibold rounded-xl text-sm transition-all hover:scale-[1.02]"
         >
-          <Plus size={18} className="mr-1.5 text-amber-300" />
+          <Plus size={19} className="mr-1.5 text-amber-300" />
           Add expense
         </Button>
       </div>
@@ -255,7 +251,8 @@ export default function Dashboard() {
               selectedExpenses.map((expense) => (
                 <ExpenseRow
                   expense={expense}
-                  deleteExpense={deleteExpense}
+                  onEdit={openEdit}
+                  onDelete={openDelete}
                   key={expense.id}
                 />
               ))
@@ -285,90 +282,23 @@ export default function Dashboard() {
         </Card>
       </div>
 
-      {/* Add Expense Shadcn Dialog */}
-      <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
-        <DialogContent className="sm:max-w-md border-emerald-950/20 dark:border-emerald-800/40 dark:bg-[#0c241b]">
-          <form onSubmit={addExpense} className="space-y-4">
-            <DialogHeader>
-              <p className={labelClass}>New activity</p>
-              <DialogTitle className="mt-1 font-display text-2xl font-extrabold text-emerald-950 dark:text-amber-100">
-                Add an expense
-              </DialogTitle>
-              <DialogDescription className="text-slate-500 dark:text-emerald-200/70">
-                Record your daily purchase to keep household accounts accurate.
-              </DialogDescription>
-            </DialogHeader>
+      {/* Add / Edit Expense Dialog Component */}
+      <ExpenseDialog
+        open={isAddOpen}
+        onOpenChange={setIsAddOpen}
+        expense={editingExpense}
+        categories={categories}
+        defaultDate={selectedDate}
+        onSave={saveExpense}
+      />
 
-            <div className="space-y-3.5 py-2">
-              <Field label="Date">
-                <Input
-                  type="date"
-                  value={form.date}
-                  onChange={(event) => setForm({ ...form, date: event.target.value })}
-                  className="bg-white dark:bg-[#071711] border-emerald-950/20 dark:border-emerald-800/40"
-                  required
-                />
-              </Field>
-
-              <Field label="Category">
-                <Select
-                  value={form.category}
-                  onValueChange={(val) => setForm({ ...form, category: val })}
-                >
-                  <SelectTrigger className="w-full bg-white dark:bg-[#071711] border-emerald-950/20 dark:border-emerald-800/40">
-                    <SelectValue placeholder="Select category" />
-                  </SelectTrigger>
-                  <SelectContent className="dark:bg-[#0c241b] border-emerald-900/30">
-                    {categories.map((category) => (
-                      <SelectItem key={category.name} value={category.name}>
-                        {category.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </Field>
-
-              <Field label="Amount (PKR)">
-                <Input
-                  type="number"
-                  min="1"
-                  placeholder="0"
-                  value={form.amount}
-                  onChange={(event) => setForm({ ...form, amount: event.target.value })}
-                  className="bg-white dark:bg-[#071711] border-emerald-950/20 dark:border-emerald-800/40 font-bold"
-                  required
-                  autoFocus
-                />
-              </Field>
-
-              <Field label="Description (optional)">
-                <Input
-                  placeholder="e.g. Vegetables, Groceries, Fuel"
-                  value={form.description}
-                  onChange={(event) =>
-                    setForm({ ...form, description: event.target.value })
-                  }
-                  className="bg-white dark:bg-[#071711] border-emerald-950/20 dark:border-emerald-800/40"
-                />
-              </Field>
-            </div>
-
-            <DialogFooter className="gap-2 sm:gap-0">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setIsAddOpen(false)}
-                className="border-emerald-900/20 dark:border-emerald-800/40"
-              >
-                Cancel
-              </Button>
-              <Button type="submit" className="bg-emerald-900 hover:bg-emerald-800 text-amber-200 border border-amber-400/30 font-semibold">
-                <Plus size={16} className="mr-1 text-amber-300" /> Save expense
-              </Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
+      {/* Delete Confirmation Dialog Component */}
+      <DeleteConfirmDialog
+        open={isDeleteOpen}
+        onOpenChange={setIsDeleteOpen}
+        expense={deletingExpense}
+        onConfirm={confirmDelete}
+      />
     </div>
   )
 }
@@ -442,9 +372,9 @@ function CalendarGrid({ dailyTotals, selectedDate, setSelectedDate }) {
   )
 }
 
-function ExpenseRow({ expense, deleteExpense }) {
+function ExpenseRow({ expense, onEdit, onDelete }) {
   return (
-    <div className="flex items-center gap-3 border-b border-emerald-950/10 py-3 last:border-0 dark:border-emerald-900/30">
+    <div className="group flex items-center gap-3 border-b border-emerald-950/10 py-3 last:border-0 dark:border-emerald-900/30">
       <div className="grid size-9 place-items-center rounded-lg bg-emerald-50 text-emerald-800 dark:bg-emerald-950/80 dark:text-amber-300 shrink-0 border border-emerald-900/10 dark:border-emerald-800/30">
         <WalletCards size={17} />
       </div>
@@ -459,24 +389,26 @@ function ExpenseRow({ expense, deleteExpense }) {
       <b className="text-xs font-bold text-emerald-950 dark:text-amber-200">
         {money(expense.amount)}
       </b>
-      <Button
-        variant="ghost"
-        size="icon-xs"
-        className="text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/50"
-        onClick={() => deleteExpense(expense.id)}
-        aria-label="Delete expense"
-      >
-        <Trash2 size={14} />
-      </Button>
+      <div className="flex items-center gap-1">
+        <Button
+          variant="ghost"
+          size="icon-xs"
+          className="text-slate-400 hover:text-amber-600 hover:bg-amber-50 dark:hover:bg-emerald-900/60 dark:hover:text-amber-300 transition-colors"
+          onClick={() => onEdit(expense)}
+          aria-label="Edit expense"
+        >
+          <Pencil size={14} />
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon-xs"
+          className="text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/50 transition-colors"
+          onClick={() => onDelete(expense)}
+          aria-label="Delete expense"
+        >
+          <Trash2 size={14} />
+        </Button>
+      </div>
     </div>
-  )
-}
-
-function Field({ label, children }) {
-  return (
-    <label className="grid gap-1.5 text-xs font-semibold text-emerald-950 dark:text-emerald-100">
-      {label}
-      {children}
-    </label>
   )
 }

@@ -49,6 +49,10 @@ export function useMyKharcha() {
   }, [isDark])
   const [form, setForm] = useState({ date: '2026-09-14', category: 'Grocery', amount: '', description: '' })
 
+  const [editingExpense, setEditingExpense] = useState(null)
+  const [deletingExpense, setDeletingExpense] = useState(null)
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false)
+
   const monthId = `${monthDate.getFullYear()}-${String(monthDate.getMonth() + 1).padStart(2, '0')}`
   const monthExpenses = useMemo(() => expenses.filter((expense) => expense.date.startsWith(monthId)), [expenses, monthId])
   const spent = monthExpenses.reduce((sum, expense) => sum + expense.amount, 0)
@@ -59,7 +63,7 @@ export function useMyKharcha() {
   const selectedExpenses = monthExpenses.filter((expense) => expense.date === selectedDate)
   const selectedTotal = selectedExpenses.reduce((sum, expense) => sum + expense.amount, 0)
   const filteredExpenses = useMemo(() => monthExpenses.filter((expense) => {
-    const matchesSearch = `${expense.category} ${expense.description}`.toLowerCase().includes(searchTerm.toLowerCase())
+    const matchesSearch = `${expense.category} ${expense.description || ''}`.toLowerCase().includes(searchTerm.toLowerCase())
     const matchesCategory = filterCategory === 'All categories' || expense.category === filterCategory
     return matchesSearch && matchesCategory
   }), [monthExpenses, searchTerm, filterCategory])
@@ -72,9 +76,57 @@ export function useMyKharcha() {
   }
 
   const changeMonth = (offset) => setMonthDate(new Date(monthDate.getFullYear(), monthDate.getMonth() + offset, 1))
+  
   const openAdd = (date = selectedDate) => {
+    setEditingExpense(null)
     setForm({ date, category: 'Grocery', amount: '', description: '' })
     setIsAddOpen(true)
+  }
+
+  const openEdit = (expense) => {
+    setEditingExpense(expense)
+    setForm({
+      date: expense.date,
+      category: expense.category,
+      amount: String(expense.amount),
+      description: expense.description || '',
+    })
+    setIsAddOpen(true)
+  }
+
+  const openDelete = (expense) => {
+    setDeletingExpense(expense)
+    setIsDeleteOpen(true)
+  }
+
+  const saveExpense = (data) => {
+    if (!data.amount || Number(data.amount) <= 0) return
+    if (data.id) {
+      // Edit existing expense
+      const updated = expenses.map((exp) => (exp.id === data.id ? { ...exp, ...data, amount: Number(data.amount) } : exp))
+      persistExpenses(updated)
+    } else {
+      // Add new expense
+      const newExpense = {
+        id: Date.now(),
+        date: data.date,
+        category: data.category,
+        amount: Number(data.amount),
+        description: data.description || '',
+      }
+      persistExpenses([newExpense, ...expenses])
+      setSelectedDate(data.date)
+    }
+    setEditingExpense(null)
+    setIsAddOpen(false)
+  }
+
+  const confirmDelete = (id) => {
+    const targetId = id || deletingExpense?.id
+    if (!targetId) return
+    persistExpenses(expenses.filter((expense) => expense.id !== targetId))
+    setDeletingExpense(null)
+    setIsDeleteOpen(false)
   }
 
   useEffect(() => {
@@ -87,13 +139,17 @@ export function useMyKharcha() {
   }, [selectedDate])
 
   const addExpense = (event) => {
-    event.preventDefault()
+    if (event?.preventDefault) event.preventDefault()
     if (!form.amount || Number(form.amount) <= 0) return
-    persistExpenses([{ ...form, id: Date.now(), amount: Number(form.amount) }, ...expenses])
-    setSelectedDate(form.date)
-    setIsAddOpen(false)
+    if (editingExpense) {
+      saveExpense({ ...form, id: editingExpense.id })
+    } else {
+      saveExpense(form)
+    }
   }
+
   const deleteExpense = (id) => persistExpenses(expenses.filter((expense) => expense.id !== id))
+  
   const saveBudget = (value) => {
     const nextBudget = Number(value)
     if (!nextBudget || nextBudget < 0) return
@@ -123,14 +179,24 @@ export function useMyKharcha() {
     filterCategory,
     filteredExpenses,
     form,
+    editingExpense,
+    deletingExpense,
+    isDeleteOpen,
     setForm,
     setSelectedDate,
     setIsAddOpen,
+    setEditingExpense,
+    setDeletingExpense,
+    setIsDeleteOpen,
     setIsDark,
     setSearchTerm,
     setFilterCategory,
     changeMonth,
     openAdd,
+    openEdit,
+    openDelete,
+    saveExpense,
+    confirmDelete,
     addExpense,
     deleteExpense,
     saveBudget,
