@@ -13,69 +13,57 @@ export default {
         display: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
       },
       colors: {
-        // Primary palette - indigo gradient
-        primary: {
-          50: '#eef2ff',
-          100: '#e0e7ff',
-          200: '#c7d2fe',
-          300: '#a5b4fc',
-          400: '#818cf8',
-          500: '#6366f1',
-          600: '#4f46e5',
-          700: '#4338ca',
-          800: '#3730a3',
-          900: '#312e81',
+        // Luxury Emerald & Forest Green Palette
+        emerald: {
+          50: '#f0fdf4',
+          100: '#dcfce7',
+          200: '#bbf7d0',
+          300: '#86efac',
+          400: '#4ade80',
+          500: '#22c55e',
+          600: '#16a34a',
+          700: '#15803d',
+          800: '#166534',
+          900: '#14532d',
+          950: '#052e16',
         },
-        // Semantic colors
-        success: {
-          50: '#ecfdf5',
-          100: '#d1fae5',
-          500: '#10b981',
-          600: '#059669',
+        forest: {
+          50: '#f2f9f5',
+          100: '#e1f2e9',
+          200: '#c4e4d4',
+          300: '#99cfb5',
+          400: '#67b390',
+          500: '#439772',
+          600: '#327a5b',
+          700: '#28624a',
+          800: '#224e3c',
+          900: '#1d4133',
+          950: '#0c221a',
         },
-        warning: {
-          50: '#fffbeb',
-          100: '#fef3c7',
-          500: '#f59e0b',
-          600: '#d97706',
+        // Royal Gold & Amber Palette
+        gold: {
+          50: '#fefce8',
+          100: '#fef9c3',
+          200: '#fef08a',
+          300: '#fde047',
+          400: '#facc15',
+          500: '#eab308',
+          600: '#ca8a04',
+          700: '#a16207',
+          800: '#854d0e',
+          900: '#713f12',
+          950: '#422006',
         },
-        danger: {
-          50: '#fef2f2',
-          100: '#fee2e2',
-          500: '#ef4444',
-          600: '#dc2626',
-        },
-        // Neutral palette
-        ink: {
-          DEFAULT: '#1a1d23',
-          secondary: '#4b5563',
-          muted: '#9ca3af',
-        },
-        paper: {
-          DEFAULT: '#f8f9fb',
-          dark: '#0f1117',
-        },
-        surface: {
-          DEFAULT: '#ffffff',
-          dark: '#1a1d27',
-          hover: '#f3f4f6',
-          hoverDark: '#22252f',
-        },
-        line: {
-          DEFAULT: '#e5e7eb',
-          soft: '#f0f1f3',
-          dark: '#2a2d39',
-        },
-        // Category colors
+        // Category colors tuned for dark green & gold harmony
         category: {
-          rent: '#6366f1',
-          grocery: '#f59e0b',
-          electricity: '#10b981',
-          vehicle: '#8b5cf6',
-          gas: '#06b6d4',
-          water: '#3b82f6',
-          uncle: '#ec4899',
-          coral: '#f97316',
+          rent: '#047857',       // Forest Emerald
+          grocery: '#d97706',    // Warm Amber Gold
+          electricity: '#059669',// Deep Mint Pine
+          vehicle: '#b45309',    // Bronze Gold
+          gas: '#0d9488',        // Teal Jade
+          water: '#0284c7',      // Sapphire Pine
+          uncle: '#ca8a04',      // Royal Gold
+          coral: '#e11d48',      // Rich Ruby (for alerts)
         }
       },
       borderRadius: {
@@ -91,34 +79,8 @@ export default {
         md: '0 4px 6px -1px rgba(0,0,0,.06), 0 2px 4px -2px rgba(0,0,0,.04)',
         lg: '0 10px 15px -3px rgba(0,0,0,.06), 0 4px 6px -4px rgba(0,0,0,.04)',
         xl: '0 20px 25px -5px rgba(0,0,0,.07), 0 8px 10px -6px rgba(0,0,0,.04)',
-        'primary-ring': '0 0 0 3px rgba(79, 70, 229, 0.25)',
-        'primary-glow': '0 8px 24px rgba(79, 70, 229, 0.18)',
-      },
-      animation: {
-        'pulse': 'pulse 2s infinite',
-        'fade-in': 'fadeIn 0.2s ease',
-        'slide-up': 'slideUp 0.25s ease',
-      },
-      keyframes: {
-        pulse: {
-          '0%, 100%': { opacity: 1 },
-          '50%': { opacity: 0.5 },
-        },
-        fadeIn: {
-          from: { opacity: 0 },
-          to: { opacity: 1 },
-        },
-        slideUp: {
-          from: { transform: 'translateY(16px)', opacity: 0 },
-          to: { transform: 'translateY(0)', opacity: 1 },
-        },
-      },
-      backdropBlur: {
-        xs: '2px',
-        sm: '4px',
-        md: '8px',
-        lg: '12px',
-        xl: '20px',
+        'gold-glow': '0 8px 24px rgba(217, 119, 6, 0.22)',
+        'emerald-glow': '0 8px 24px rgba(6, 78, 59, 0.28)',
       },
     },
   },

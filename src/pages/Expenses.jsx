@@ -41,9 +41,9 @@ export default function Expenses() {
       action={
         <Button
           onClick={() => openAdd()}
-          className="bg-indigo-600 hover:bg-indigo-700 text-white shadow-md shadow-indigo-600/20"
+          className="bg-emerald-900 hover:bg-emerald-800 text-amber-200 border border-amber-400/30 shadow-md shadow-emerald-950/20 font-semibold"
         >
-          <Plus size={18} className="mr-1.5" />
+          <Plus size={18} className="mr-1.5 text-amber-300" />
           Add expense
         </Button>
       }
@@ -52,9 +52,9 @@ export default function Expenses() {
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-1 flex-col gap-2 sm:flex-row sm:items-center max-w-xl">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-slate-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-emerald-800/50 dark:text-emerald-300/40" />
             <Input
-              className="pl-9 bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800"
+              className="pl-9 bg-white dark:bg-[#0a2019] border-emerald-950/15 dark:border-emerald-900/30 text-emerald-950 dark:text-amber-100 placeholder:text-emerald-800/40 dark:placeholder:text-emerald-300/30"
               value={searchTerm}
               onChange={(event) => setSearchTerm(event.target.value)}
               placeholder="Search expenses..."
@@ -65,10 +65,10 @@ export default function Expenses() {
             value={filterCategory}
             onValueChange={(val) => setFilterCategory(val)}
           >
-            <SelectTrigger className="w-full sm:w-48 bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800">
+            <SelectTrigger className="w-full sm:w-48 bg-white dark:bg-[#0a2019] border-emerald-950/15 dark:border-emerald-900/30 text-emerald-950 dark:text-amber-100">
               <SelectValue placeholder="All categories" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="dark:bg-[#0c241b] border-emerald-900/40">
               <SelectItem value="All categories">All categories</SelectItem>
               {categories.map((category) => (
                 <SelectItem key={category.name} value={category.name}>
@@ -79,37 +79,37 @@ export default function Expenses() {
           </Select>
         </div>
 
-        <div className="text-xs text-slate-500 font-medium">
-          Showing <span className="font-bold text-slate-900 dark:text-white">{filteredExpenses.length}</span> items ·{' '}
-          <span className="font-bold text-indigo-600 dark:text-indigo-400">{money(totalFiltered)}</span>
+        <div className="text-xs text-emerald-900/70 dark:text-emerald-200/70 font-medium">
+          Showing <span className="font-bold text-emerald-950 dark:text-white">{filteredExpenses.length}</span> items ·{' '}
+          <span className="font-bold text-emerald-800 dark:text-amber-300">{money(totalFiltered)}</span>
         </div>
       </div>
 
       {/* Expenses List Card */}
-      <Card className="px-5 py-2 bg-white dark:bg-slate-950 border-slate-200/80 dark:border-slate-800/80">
+      <Card className="px-5 py-2 bg-white dark:bg-[#0a2019] border-emerald-950/10 dark:border-emerald-900/30">
         {filteredExpenses.length ? (
           filteredExpenses.map((expense) => (
             <div
-              className="flex items-center gap-3 border-b border-slate-100 py-4 last:border-0 dark:border-slate-800/60"
+              className="flex items-center gap-3 border-b border-emerald-950/10 py-4 last:border-0 dark:border-emerald-900/30"
               key={expense.id}
             >
-              <div className="grid size-10 place-items-center rounded-lg bg-indigo-50 text-indigo-600 dark:bg-indigo-950 dark:text-indigo-400 shrink-0">
+              <div className="grid size-10 place-items-center rounded-lg bg-emerald-50 text-emerald-800 dark:bg-emerald-950/80 dark:text-amber-300 shrink-0 border border-emerald-900/10 dark:border-emerald-800/30">
                 <WalletCards size={18} />
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
-                  <strong className="block text-xs font-semibold text-slate-900 dark:text-slate-100">
+                  <strong className="block text-xs font-semibold text-emerald-950 dark:text-amber-100">
                     {expense.category}
                   </strong>
-                  <span className="text-[10px] rounded-full bg-slate-100 dark:bg-slate-800 px-2 py-0.5 text-slate-500">
+                  <span className="text-[10px] rounded-full bg-emerald-50 dark:bg-emerald-950/80 border border-emerald-900/10 dark:border-emerald-800/30 px-2 py-0.5 text-emerald-800/80 dark:text-amber-300/80 font-medium">
                     {expense.date}
                   </span>
                 </div>
-                <span className="mt-0.5 block truncate text-[11px] text-slate-400">
+                <span className="mt-0.5 block truncate text-[11px] text-slate-400 dark:text-emerald-300/50">
                   {expense.description || 'No description'}
                 </span>
               </div>
-              <b className="text-sm font-bold text-slate-900 dark:text-slate-100">
+              <b className="text-sm font-bold text-emerald-950 dark:text-amber-200">
                 {money(expense.amount)}
               </b>
               <Button
@@ -124,8 +124,8 @@ export default function Expenses() {
             </div>
           ))
         ) : (
-          <div className="grid place-items-center gap-3 py-16 text-xs text-slate-500">
-            <div className="grid size-12 place-items-center rounded-full bg-slate-100 dark:bg-slate-800 text-slate-400">
+          <div className="grid place-items-center gap-3 py-16 text-xs text-emerald-800/60 dark:text-emerald-300/60">
+            <div className="grid size-12 place-items-center rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700/60 dark:text-amber-400/60 border border-emerald-900/10 dark:border-emerald-800/30">
               <CalendarDays size={24} />
             </div>
             <span>
@@ -135,9 +135,9 @@ export default function Expenses() {
               variant="outline"
               size="sm"
               onClick={() => openAdd()}
-              className="mt-1"
+              className="mt-1 border-emerald-900/20 dark:border-emerald-800/40 text-emerald-900 dark:text-amber-200"
             >
-              <Plus size={15} className="mr-1" /> Add an expense
+              <Plus size={15} className="mr-1 text-amber-500" /> Add an expense
             </Button>
           </div>
         )}
@@ -145,41 +145,42 @@ export default function Expenses() {
 
       {/* Add Expense Dialog */}
       <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md border-emerald-950/20 dark:border-emerald-800/40 dark:bg-[#0c241b]">
           <form onSubmit={addExpense} className="space-y-4">
             <DialogHeader>
-              <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-emerald-800/60 dark:text-amber-400/60">
                 New activity
               </p>
-              <DialogTitle className="mt-1 font-display text-2xl font-extrabold text-slate-900 dark:text-white">
+              <DialogTitle className="mt-1 font-display text-2xl font-extrabold text-emerald-950 dark:text-amber-100">
                 Add an expense
               </DialogTitle>
-              <DialogDescription>
+              <DialogDescription className="text-slate-500 dark:text-emerald-200/70">
                 Record your daily purchase to keep household accounts accurate.
               </DialogDescription>
             </DialogHeader>
 
             <div className="space-y-3.5 py-2">
-              <label className="grid gap-1.5 text-xs font-semibold text-slate-700 dark:text-slate-300">
+              <label className="grid gap-1.5 text-xs font-semibold text-emerald-950 dark:text-emerald-100">
                 Date
                 <Input
                   type="date"
                   value={form.date}
                   onChange={(event) => setForm({ ...form, date: event.target.value })}
+                  className="bg-white dark:bg-[#071711] border-emerald-950/20 dark:border-emerald-800/40"
                   required
                 />
               </label>
 
-              <label className="grid gap-1.5 text-xs font-semibold text-slate-700 dark:text-slate-300">
+              <label className="grid gap-1.5 text-xs font-semibold text-emerald-950 dark:text-emerald-100">
                 Category
                 <Select
                   value={form.category}
                   onValueChange={(val) => setForm({ ...form, category: val })}
                 >
-                  <SelectTrigger className="w-full">
+                  <SelectTrigger className="w-full bg-white dark:bg-[#071711] border-emerald-950/20 dark:border-emerald-800/40">
                     <SelectValue placeholder="Select category" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="dark:bg-[#0c241b] border-emerald-900/30">
                     {categories.map((category) => (
                       <SelectItem key={category.name} value={category.name}>
                         {category.name}
@@ -189,7 +190,7 @@ export default function Expenses() {
                 </Select>
               </label>
 
-              <label className="grid gap-1.5 text-xs font-semibold text-slate-700 dark:text-slate-300">
+              <label className="grid gap-1.5 text-xs font-semibold text-emerald-950 dark:text-emerald-100">
                 Amount (PKR)
                 <Input
                   type="number"
@@ -197,12 +198,13 @@ export default function Expenses() {
                   placeholder="0"
                   value={form.amount}
                   onChange={(event) => setForm({ ...form, amount: event.target.value })}
+                  className="bg-white dark:bg-[#071711] border-emerald-950/20 dark:border-emerald-800/40 font-bold"
                   required
                   autoFocus
                 />
               </label>
 
-              <label className="grid gap-1.5 text-xs font-semibold text-slate-700 dark:text-slate-300">
+              <label className="grid gap-1.5 text-xs font-semibold text-emerald-950 dark:text-emerald-100">
                 Description (optional)
                 <Input
                   placeholder="e.g. Vegetables, Groceries, Fuel"
@@ -210,6 +212,7 @@ export default function Expenses() {
                   onChange={(event) =>
                     setForm({ ...form, description: event.target.value })
                   }
+                  className="bg-white dark:bg-[#071711] border-emerald-950/20 dark:border-emerald-800/40"
                 />
               </label>
             </div>
@@ -219,11 +222,12 @@ export default function Expenses() {
                 type="button"
                 variant="outline"
                 onClick={() => setIsAddOpen(false)}
+                className="border-emerald-900/20 dark:border-emerald-800/40"
               >
                 Cancel
               </Button>
-              <Button type="submit" className="bg-indigo-600 hover:bg-indigo-700 text-white">
-                <Plus size={16} className="mr-1" /> Save expense
+              <Button type="submit" className="bg-emerald-900 hover:bg-emerald-800 text-amber-200 border border-amber-400/30 font-semibold">
+                <Plus size={16} className="mr-1 text-amber-300" /> Save expense
               </Button>
             </DialogFooter>
           </form>

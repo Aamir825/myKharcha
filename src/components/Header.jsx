@@ -6,7 +6,7 @@ export default function Header({
   children,
 }) {
   return (
-    <div className="mx-auto max-w-[1320px] space-y-6">
+    <div className="space-y-6">
       <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-end">
         <div>
           <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">

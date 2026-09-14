@@ -1,13 +1,13 @@
 import { useEffect, useMemo, useState } from 'react'
 
 export const categories = [
-  { name: 'Home Rent', color: '#e2735b' },
-  { name: 'Grocery', color: '#d9a441' },
-  { name: 'Electricity Bill', color: '#7d9b76' },
-  { name: 'Vehicle Gas', color: '#a786c4' },
-  { name: 'Gas Bill', color: '#5e8f9e' },
-  { name: 'Water Bill', color: '#6b9fd0' },
-  { name: 'Uncle Store Payment', color: '#c77b6b' },
+  { name: 'Home Rent', color: '#047857' },
+  { name: 'Grocery', color: '#d97706' },
+  { name: 'Electricity Bill', color: '#059669' },
+  { name: 'Vehicle Gas', color: '#b45309' },
+  { name: 'Gas Bill', color: '#0d9488' },
+  { name: 'Water Bill', color: '#0284c7' },
+  { name: 'Uncle Store Payment', color: '#ca8a04' },
 ]
 
 const initialExpenses = [

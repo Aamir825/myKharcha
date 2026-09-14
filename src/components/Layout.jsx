@@ -18,23 +18,23 @@ export default function Layout() {
           .replace(/^[a-z]/, (letter) => letter.toUpperCase())
 
   return (
-    <div className="h-screen w-screen overflow-hidden flex bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-50 antialiased">
+    <div className="h-screen w-screen overflow-hidden flex bg-[#f6f9f7] text-slate-900 dark:bg-[#05140f] dark:text-emerald-50 antialiased">
       {/* Fixed Sidebar */}
       <Sidebar />
 
       {/* Main Column: Fixed Top Header + Scrollable Main Content */}
       <div className="flex-1 flex flex-col h-screen min-w-0 overflow-hidden">
         {/* Fixed Top Header */}
-        <header className="shrink-0 z-20 flex h-16 items-center justify-between border-b border-slate-200/80 bg-white/90 px-4 backdrop-blur md:h-[72px] md:px-10 dark:border-slate-800/80 dark:bg-slate-950/90">
-          <div className="flex items-center gap-2.5 text-xs font-medium text-slate-500 dark:text-slate-400">
-            <span className="font-semibold text-slate-700 dark:text-slate-300">MyKharcha</span>
-            <ChevronRight size={14} className="text-slate-400" />
-            <span className="font-bold text-slate-900 dark:text-white">{pageTitle}</span>
+        <header className="shrink-0 z-20 flex h-16 items-center justify-between border-b border-emerald-950/10 bg-white/90 px-4 backdrop-blur md:h-[72px] md:px-10 dark:border-emerald-900/30 dark:bg-[#081b14]/90">
+          <div className="flex items-center gap-2.5 text-xs font-medium text-emerald-800/70 dark:text-emerald-300/70">
+            <span className="font-bold text-emerald-950 dark:text-amber-200">MyKharcha</span>
+            <ChevronRight size={14} className="text-emerald-400 dark:text-emerald-600" />
+            <span className="font-bold text-emerald-900 dark:text-amber-300">{pageTitle}</span>
           </div>
 
           <div className="flex items-center gap-3">
             {/* Synced status badge */}
-            <div className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-[11px] font-semibold text-emerald-700 border border-emerald-200/60 dark:bg-emerald-950/50 dark:border-emerald-800/60 dark:text-emerald-300">
+            <div className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-[11px] font-semibold text-emerald-800 border border-emerald-300/70 dark:bg-emerald-950/80 dark:border-emerald-700/60 dark:text-emerald-300">
               <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
               Synced
             </div>
@@ -45,14 +45,14 @@ export default function Layout() {
               size="icon-sm"
               onClick={() => setIsDark(!isDark)}
               title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-              className="text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
+              className="text-emerald-800 hover:text-amber-600 hover:bg-emerald-50 dark:text-amber-300 dark:hover:text-amber-200 dark:hover:bg-emerald-950/70"
             >
               {isDark ? <Sun size={17} /> : <Moon size={17} />}
             </Button>
 
             {/* User Avatar */}
-            <Avatar size="sm" className="bg-orange-500 text-white font-bold">
-              <AvatarFallback className="bg-orange-500 text-white text-xs font-bold">AK</AvatarFallback>
+            <Avatar size="sm" className="bg-gradient-to-br from-amber-500 to-amber-700 text-white font-bold ring-1 ring-amber-400/40">
+              <AvatarFallback className="bg-gradient-to-br from-amber-500 to-amber-700 text-white text-xs font-bold">AK</AvatarFallback>
             </Avatar>
           </div>
         </header>
