@@ -43,7 +43,7 @@ export default function Calendar() {
       action={
         <Button
           onClick={() => openAdd(selectedDate)}
-          className="h-11 px-5 py-2.5 bg-emerald-900 hover:bg-emerald-800 text-amber-200 border border-amber-400/30 shadow-md shadow-emerald-950/20 font-semibold rounded-xl text-sm transition-all hover:scale-[1.02]"
+          className="h-11 md:flex hidden px-5 py-2.5 bg-emerald-900 hover:bg-emerald-800 text-amber-200 border border-amber-400/30 shadow-md shadow-emerald-950/20 font-semibold rounded-xl text-sm transition-all hover:scale-[1.02]"
         >
           <Plus size={19} className="mr-1.5 text-amber-300" />
           Add expense
@@ -107,8 +107,8 @@ export default function Calendar() {
                 <button
                   type="button"
                   className={`grid min-h-14 place-content-center gap-1 rounded-xl border transition-all p-1.5 ${isSelected
-                      ? 'border-amber-400/60 bg-emerald-900 text-amber-200 shadow-lg shadow-emerald-950/25 font-bold'
-                      : 'border-emerald-950/10 dark:border-emerald-900/30 bg-emerald-50/30 dark:bg-[#071711] text-emerald-950 dark:text-emerald-200/80 hover:bg-emerald-100/50 dark:hover:bg-emerald-950/70'
+                    ? 'border-amber-400/60 bg-emerald-900 text-amber-200 shadow-lg shadow-emerald-950/25 font-bold'
+                    : 'border-emerald-950/10 dark:border-emerald-900/30 bg-emerald-50/30 dark:bg-[#071711] text-emerald-950 dark:text-emerald-200/80 hover:bg-emerald-100/50 dark:hover:bg-emerald-950/70'
                     }`}
                   onClick={() => setSelectedDate(date)}
                   key={date}

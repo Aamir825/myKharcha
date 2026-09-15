@@ -154,7 +154,6 @@ export default function ExpenseDialog({
                   onChange={(event) => setAmount(event.target.value)}
                   className="h-10 bg-white dark:bg-[#071711] border-emerald-950/20 dark:border-emerald-800/40 font-bold text-emerald-950 dark:text-amber-100 placeholder:text-slate-400"
                   required
-                  autoFocus={!isEditing}
                 />
               </div>
             </label>

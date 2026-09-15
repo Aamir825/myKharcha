@@ -39,7 +39,7 @@ export default function Expenses() {
       action={
         <Button
           onClick={() => openAdd()}
-          className="h-11 px-5 py-2.5 bg-emerald-900 hover:bg-emerald-800 text-amber-200 border border-amber-400/30 shadow-md shadow-emerald-950/20 font-semibold rounded-xl text-sm transition-all hover:scale-[1.02]"
+          className="h-11 md:flex hidden px-5 py-2.5 bg-emerald-900 hover:bg-emerald-800 text-amber-200 border border-amber-400/30 shadow-md shadow-emerald-950/20 font-semibold rounded-xl text-sm transition-all hover:scale-[1.02]"
         >
           <Plus size={19} className="mr-1.5 text-amber-300" />
           Add expense
