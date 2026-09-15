@@ -8,7 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/ui/dialog'
-import { money } from '../hooks/useMyKharcha'
+import { money } from '../utils/formatters'
 
 export default function DeleteConfirmDialog({
   open,

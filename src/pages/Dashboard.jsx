@@ -1,9 +1,10 @@
 import { ArrowDownRight, CalendarDays, ChevronLeft, ChevronRight, Ellipsis, Pencil, Plus, Search, Trash2, WalletCards } from 'lucide-react'
-import { money, useMyKharcha } from '../hooks/useMyKharcha'
 import { Button } from '@/ui/button'
 import { Card } from '@/ui/card'
 import ExpenseDialog from '../components/ExpenseDialog'
 import DeleteConfirmDialog from '../components/DeleteConfirmDialog'
+import { useDashboard } from '../hooks/useDashboard'
+import { money } from '../utils/formatters'
 
 const monthLabel = (date) =>
   date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
@@ -13,6 +14,7 @@ const labelClass = 'text-[10px] font-bold uppercase tracking-widest text-emerald
 
 export default function Dashboard() {
   const {
+    user,
     monthDate,
     selectedDate,
     selectedExpenses,
@@ -35,12 +37,15 @@ export default function Dashboard() {
     setIsAddOpen,
     setIsDeleteOpen,
     changeMonth,
+    goToToday,
     openAdd,
     openEdit,
     openDelete,
     saveExpense,
     confirmDelete,
-  } = useMyKharcha()
+  } = useDashboard()
+
+  const displayName = (user?.name || 'Amna & Khalid').split('&')[0].trim()
 
   return (
     <div className="space-y-6">
@@ -49,7 +54,7 @@ export default function Dashboard() {
         <div>
           <p className={labelClass}>Monday, 14 September</p>
           <h1 className="mt-1.5 font-display text-3xl font-extrabold tracking-tight text-emerald-950 md:text-4xl dark:text-amber-100">
-            Good morning, Amna <span className="text-amber-400">✦</span>
+            Good morning, {displayName} <span className="text-amber-400">✦</span>
           </h1>
           <p className="mt-1.5 text-sm text-slate-500 dark:text-emerald-200/70">
             Here’s how your household is doing this month.
@@ -90,6 +95,7 @@ export default function Dashboard() {
         <Button
           variant="outline"
           size="sm"
+          onClick={goToToday}
           className="ml-1 text-xs border-emerald-900/20 dark:border-emerald-800/40 text-emerald-900 dark:text-amber-200 hover:bg-emerald-50 dark:hover:bg-emerald-950"
         >
           Today

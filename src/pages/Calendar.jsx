@@ -4,7 +4,8 @@ import { Button } from '@/ui/button'
 import { Card } from '@/ui/card'
 import ExpenseDialog from '../components/ExpenseDialog'
 import DeleteConfirmDialog from '../components/DeleteConfirmDialog'
-import { money, useMyKharcha } from '../hooks/useMyKharcha'
+import { useCalendar } from '../hooks/useCalendar'
+import { money } from '../utils/formatters'
 
 export default function Calendar() {
   const {
@@ -27,7 +28,7 @@ export default function Calendar() {
     setIsDeleteOpen,
     saveExpense,
     confirmDelete,
-  } = useMyKharcha()
+  } = useCalendar()
 
   const days = new Date(
     monthDate.getFullYear(),
@@ -105,20 +106,18 @@ export default function Calendar() {
               return (
                 <button
                   type="button"
-                  className={`grid min-h-14 place-content-center gap-1 rounded-xl border transition-all p-1.5 ${
-                    isSelected
+                  className={`grid min-h-14 place-content-center gap-1 rounded-xl border transition-all p-1.5 ${isSelected
                       ? 'border-amber-400/60 bg-emerald-900 text-amber-200 shadow-lg shadow-emerald-950/25 font-bold'
                       : 'border-emerald-950/10 dark:border-emerald-900/30 bg-emerald-50/30 dark:bg-[#071711] text-emerald-950 dark:text-emerald-200/80 hover:bg-emerald-100/50 dark:hover:bg-emerald-950/70'
-                  }`}
+                    }`}
                   onClick={() => setSelectedDate(date)}
                   key={date}
                 >
                   <span className="text-xs font-bold">{index + 1}</span>
                   {total > 0 && (
                     <small
-                      className={`text-[10px] font-bold truncate ${
-                        isSelected ? 'text-amber-300' : 'text-amber-600 dark:text-amber-400'
-                      }`}
+                      className={`text-[10px] font-bold truncate ${isSelected ? 'text-amber-300' : 'text-amber-600 dark:text-amber-400'
+                        }`}
                     >
                       {total >= 1000 ? `${(total / 1000).toFixed(1)}k` : total}
                     </small>

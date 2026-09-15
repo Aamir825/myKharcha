@@ -3,11 +3,13 @@ import { Outlet, useLocation } from 'react-router-dom'
 import Sidebar from './Sidebar'
 import { Avatar, AvatarFallback } from '@/ui/avatar'
 import { Button } from '@/ui/button'
-import { useMyKharcha } from '../hooks/useMyKharcha'
+import { useTheme } from '../hooks/useTheme'
+import { useAuth } from '../hooks/useAuth'
 
 export default function Layout() {
   const { pathname } = useLocation()
-  const { isDark, setIsDark } = useMyKharcha()
+  const { isDark, toggleTheme } = useTheme()
+  const { initials } = useAuth()
 
   const pageTitle =
     pathname === '/'
@@ -43,7 +45,7 @@ export default function Layout() {
             <Button
               variant="ghost"
               size="icon-sm"
-              onClick={() => setIsDark(!isDark)}
+              onClick={toggleTheme}
               title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
               className="text-emerald-800 hover:text-amber-600 hover:bg-emerald-50 dark:text-amber-300 dark:hover:text-amber-200 dark:hover:bg-emerald-950/70"
             >
@@ -52,7 +54,7 @@ export default function Layout() {
 
             {/* User Avatar */}
             <Avatar size="sm" className="bg-gradient-to-br from-amber-500 to-amber-700 text-white font-bold ring-1 ring-amber-400/40">
-              <AvatarFallback className="bg-gradient-to-br from-amber-500 to-amber-700 text-white text-xs font-bold">AK</AvatarFallback>
+              <AvatarFallback className="bg-gradient-to-br from-amber-500 to-amber-700 text-white text-xs font-bold">{initials}</AvatarFallback>
             </Avatar>
           </div>
         </header>

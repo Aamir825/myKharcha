@@ -1,22 +1,22 @@
 import { Check, Moon, Save, Sun, WalletCards } from 'lucide-react'
-import { useState } from 'react'
 import Header from '../components/Header'
 import { Button } from '@/ui/button'
 import { Card } from '@/ui/card'
 import { Input } from '@/ui/input'
-import { money, useMyKharcha } from '../hooks/useMyKharcha'
+import { useSettings } from '../hooks/useSettings'
+import { money } from '../utils/formatters'
 
 export default function Settings() {
-  const { budget, saveBudget, isDark, setIsDark } = useMyKharcha()
-  const [value, setValue] = useState(String(budget))
-  const [saved, setSaved] = useState(false)
-
-  const submit = (event) => {
-    event.preventDefault()
-    saveBudget(value)
-    setSaved(true)
-    setTimeout(() => setSaved(false), 3000)
-  }
+  const {
+    budget,
+    isDark,
+    setIsDark,
+    value,
+    setValue,
+    saved,
+    setSaved,
+    submit,
+  } = useSettings()
 
   return (
     <Header

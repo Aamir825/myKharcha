@@ -6,17 +6,19 @@ import { Input } from '@/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/ui/select'
 import ExpenseDialog from '../components/ExpenseDialog'
 import DeleteConfirmDialog from '../components/DeleteConfirmDialog'
-import { money, useMyKharcha } from '../hooks/useMyKharcha'
+import { useExpenses } from '../hooks/useExpenses'
+import { money } from '../utils/formatters'
 
 export default function Expenses() {
   const {
     monthDate,
+    categories,
     filteredExpenses,
+    totalFiltered,
     searchTerm,
     filterCategory,
     setSearchTerm,
     setFilterCategory,
-    categories,
     isAddOpen,
     setIsAddOpen,
     editingExpense,
@@ -28,9 +30,7 @@ export default function Expenses() {
     openDelete,
     saveExpense,
     confirmDelete,
-  } = useMyKharcha()
-
-  const totalFiltered = filteredExpenses.reduce((sum, e) => sum + e.amount, 0)
+  } = useExpenses()
 
   return (
     <Header
@@ -67,10 +67,23 @@ export default function Expenses() {
               <SelectValue placeholder="All categories" />
             </SelectTrigger>
             <SelectContent className="dark:bg-[#0c241b] border-emerald-900/40">
-              <SelectItem value="All categories">All categories</SelectItem>
+              <SelectItem value="All categories">
+                <div className="flex items-center gap-2">
+                  <span className="size-2.5 rounded-full bg-emerald-600/60 dark:bg-amber-400/60 shrink-0" />
+                  <span>All categories</span>
+                </div>
+              </SelectItem>
               {categories.map((category) => (
                 <SelectItem key={category.name} value={category.name}>
-                  {category.name}
+                  <div className="flex items-center gap-2">
+                    {category.color && (
+                      <span
+                        className="size-2.5 rounded-full shrink-0"
+                        style={{ backgroundColor: category.color }}
+                      />
+                    )}
+                    <span>{category.name}</span>
+                  </div>
                 </SelectItem>
               ))}
             </SelectContent>

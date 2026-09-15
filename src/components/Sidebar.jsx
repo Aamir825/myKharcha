@@ -10,7 +10,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/ui/dropdown-menu'
-import { useMyKharcha } from '../hooks/useMyKharcha'
+import { useAuth } from '../hooks/useAuth'
+import { useTheme } from '../hooks/useTheme'
 
 const desktopMenu = [
   { label: 'Home', path: '/', icon: LayoutDashboard },
@@ -23,7 +24,8 @@ const desktopMenu = [
 
 export default function Sidebar() {
   const { pathname } = useLocation()
-  const { isDark, setIsDark } = useMyKharcha()
+  const { isDark, setIsDark } = useTheme()
+  const { user, initials, logout } = useAuth()
 
   const handleQuickAdd = () => {
     window.dispatchEvent(new CustomEvent('open-add-expense'))
@@ -81,11 +83,11 @@ export default function Sidebar() {
           <DropdownMenu>
             <DropdownMenuTrigger className="flex w-full items-center gap-3 rounded-lg p-2 text-left hover:bg-emerald-50 transition-colors dark:hover:bg-emerald-950/60 outline-none">
               <Avatar size="sm" className="bg-gradient-to-br from-amber-500 to-amber-700 text-white font-bold ring-1 ring-amber-400/40">
-                <AvatarFallback className="bg-gradient-to-br from-amber-500 to-amber-700 text-white text-xs font-bold">AK</AvatarFallback>
+                <AvatarFallback className="bg-gradient-to-br from-amber-500 to-amber-700 text-white text-xs font-bold">{initials}</AvatarFallback>
               </Avatar>
               <div className="min-w-0 flex-1">
                 <strong className="block truncate text-xs font-bold text-emerald-950 dark:text-amber-100">
-                  Amna & Khalid
+                  {user?.name || 'Amna & Khalid'}
                 </strong>
                 <span className="block truncate text-[10px] text-emerald-800/60 dark:text-amber-400/60">
                   Personal space
@@ -98,15 +100,24 @@ export default function Sidebar() {
                 <DropdownMenuLabel className="text-emerald-900 dark:text-amber-200">Household Account</DropdownMenuLabel>
                 <DropdownMenuSeparator className="bg-emerald-100 dark:bg-emerald-900/50" />
                 <DropdownMenuItem className="focus:bg-emerald-50 dark:focus:bg-emerald-900/40 focus:text-emerald-950 dark:focus:text-amber-200">
-                  <User className="mr-2 size-4 text-amber-600 dark:text-amber-400" /> Profile & Members
+                  <User className="mr-2 size-4 text-amber-600 dark:text-amber-400" /> {user?.email || 'amna.khalid@mykharcha.app'}
                 </DropdownMenuItem>
                 <DropdownMenuItem className="focus:bg-emerald-50 dark:focus:bg-emerald-900/40 focus:text-emerald-950 dark:focus:text-amber-200">
                   <Sparkles className="mr-2 size-4 text-amber-600 dark:text-amber-400" /> Monthly Review
                 </DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator className="bg-emerald-100 dark:bg-emerald-900/50" />
-              <DropdownMenuItem variant="destructive">
-                <LogOut className="mr-2 size-4" /> Switch Workspace
+              <DropdownMenuItem
+                variant="destructive"
+                asChild
+              >
+                <NavLink
+                  to="/login"
+                  onClick={logout}
+                  className="flex w-full items-center text-rose-600 dark:text-rose-400"
+                >
+                  <LogOut className="mr-2 size-4" /> Switch Workspace
+                </NavLink>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

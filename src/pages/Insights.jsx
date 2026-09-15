@@ -1,20 +1,25 @@
 import { BarChart3, TrendingUp, WalletCards } from 'lucide-react'
-import { useLocation } from 'react-router-dom'
 import Header from '../components/Header'
 import { Card } from '@/ui/card'
-import { money, useMyKharcha } from '../hooks/useMyKharcha'
+import { useInsights } from '../hooks/useInsights'
+import { money } from '../utils/formatters'
 
 export default function Insights() {
-  const isHistory = useLocation().pathname === '/history'
-  const { categoryTotals, dailyTotals, spent, budget, remaining, remainingDays } =
-    useMyKharcha()
-
-  const largest = categoryTotals[0]
-  const activeDays = dailyTotals.filter(Boolean).length
-  const highest = Math.max(...dailyTotals, 0)
-  const highestDay = Math.max(0, dailyTotals.indexOf(highest)) + 1
-  const monthNames = ['June', 'July', 'August', 'September']
-  const historyValues = [88500, 91200, 82450, spent]
+  const {
+    isHistory,
+    spent,
+    budget,
+    remaining,
+    remainingDays,
+    categoryTotals,
+    largest,
+    dailyTotals,
+    activeDays,
+    highest,
+    highestDay,
+    monthNames,
+    historyValues,
+  } = useInsights()
 
   return (
     <Header
