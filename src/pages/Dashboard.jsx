@@ -15,6 +15,7 @@ const labelClass = 'text-[10px] font-bold uppercase tracking-widest text-emerald
 export default function Dashboard() {
   const {
     user,
+    displayName,
     monthDate,
     selectedDate,
     selectedExpenses,
@@ -45,7 +46,7 @@ export default function Dashboard() {
     confirmDelete,
   } = useDashboard()
 
-  const displayName = (user?.name || 'Amna & Khalid').split('&')[0].trim()
+
 
   return (
     <div className="space-y-6">
@@ -165,11 +166,10 @@ export default function Dashboard() {
                   key={index}
                 >
                   <div
-                    className={`min-h-1 w-1.5 rounded-t transition-all ${
-                      total
-                        ? 'bg-gradient-to-t from-amber-600 to-amber-400 shadow-sm'
-                        : 'bg-emerald-950/10 dark:bg-emerald-950/40'
-                    } sm:w-3`}
+                    className={`min-h-1 w-1.5 rounded-t transition-all ${total
+                      ? 'bg-gradient-to-t from-amber-600 to-amber-400 shadow-sm'
+                      : 'bg-emerald-950/10 dark:bg-emerald-950/40'
+                      } sm:w-3`}
                     style={{ height: `${Math.max(3, (total / maxDaily) * 100)}%` }}
                     title={`${index + 1} Sep · ${money(total)}`}
                   />
@@ -352,11 +352,10 @@ function CalendarGrid({ dailyTotals, selectedDate, setSelectedDate }) {
           const isSelected = selectedDate === date
           return (
             <button
-              className={`grid min-h-11 place-content-center gap-0.5 rounded-lg border transition-all ${
-                isSelected
-                  ? 'border-amber-400/60 bg-emerald-900 text-amber-200 shadow-md shadow-emerald-950/25 font-bold'
-                  : 'border-transparent text-emerald-950 hover:bg-emerald-50 dark:text-emerald-200/80 dark:hover:bg-emerald-950/60'
-              }`}
+              className={`grid min-h-11 place-content-center gap-0.5 rounded-lg border transition-all ${isSelected
+                ? 'border-amber-400/60 bg-emerald-900 text-amber-200 shadow-md shadow-emerald-950/25 font-bold'
+                : 'border-transparent text-emerald-950 hover:bg-emerald-50 dark:text-emerald-200/80 dark:hover:bg-emerald-950/60'
+                }`}
               onClick={() => setSelectedDate(date)}
               key={date}
             >

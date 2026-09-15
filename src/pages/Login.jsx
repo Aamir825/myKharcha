@@ -1,8 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import {
-  ArrowRight,
-  CheckCircle2,
   Eye,
   EyeOff,
   Lock,
@@ -21,47 +18,32 @@ import { useAuth } from '../hooks/useAuth'
 import { useTheme } from '../hooks/useTheme'
 
 export default function Login() {
-  const navigate = useNavigate()
-  const { login } = useAuth()
+  const { email, setEmail, password, setPassword, username, setUsername, loading, error, handleLogin, handleRegister, setError } = useAuth()
   const { isDark, toggleTheme } = useTheme()
   const [mode, setMode] = useState('login') // 'login' | 'signup'
   const [showPassword, setShowPassword] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
+  const [success, setSuccess] = useState(null)
 
-  const [formData, setFormData] = useState({
-    name: 'Amna & Khalid',
-    email: 'amna.khalid@mykharcha.app',
-    password: 'password123',
-    rememberMe: true,
-  })
-
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
-    setIsLoading(true)
-
-    setTimeout(() => {
-      login({
-        name: formData.name || 'Amna & Khalid',
-        email: formData.email,
-        isLoggedIn: true,
-      })
-      setIsLoading(false)
-      navigate('/')
-    }, 600)
+    setError(null)
+    setSuccess(null)
+    if (mode === 'login') {
+      await handleLogin()
+    } else {
+      const successResult = await handleRegister()
+      if (successResult) {
+        // Clear form inputs
+        setUsername('')
+        setEmail('')
+        setPassword('')
+        // Switch to login tab
+        setMode('login')
+        setSuccess('Account created! Please login with your credentials.')
+      }
+    }
   }
 
-  const handleDemoLogin = () => {
-    setIsLoading(true)
-    setTimeout(() => {
-      login({
-        name: 'Amna & Khalid',
-        email: 'amna.khalid@mykharcha.app',
-        isLoggedIn: true,
-      })
-      setIsLoading(false)
-      navigate('/')
-    }, 400)
-  }
 
   return (
     <div className="relative min-h-screen w-full overflow-x-hidden bg-[#f4f8f5] dark:bg-[#030d09] text-slate-900 dark:text-slate-100 flex flex-col justify-between select-none">
@@ -173,22 +155,20 @@ export default function Login() {
               <button
                 type="button"
                 onClick={() => setMode('login')}
-                className={`flex-1 rounded-lg py-2 text-xs font-bold transition-all ${
-                  mode === 'login'
-                    ? 'bg-white dark:bg-emerald-900 text-emerald-950 dark:text-amber-200 shadow-sm'
-                    : 'text-slate-500 hover:text-emerald-900 dark:text-emerald-300/60 dark:hover:text-amber-200'
-                }`}
+                className={`flex-1 rounded-lg py-2 text-xs font-bold transition-all ${mode === 'login'
+                  ? 'bg-white dark:bg-emerald-900 text-emerald-950 dark:text-amber-200 shadow-sm'
+                  : 'text-slate-500 hover:text-emerald-900 dark:text-emerald-300/60 dark:hover:text-amber-200'
+                  }`}
               >
                 Sign In
               </button>
               <button
                 type="button"
                 onClick={() => setMode('signup')}
-                className={`flex-1 rounded-lg py-2 text-xs font-bold transition-all ${
-                  mode === 'signup'
-                    ? 'bg-white dark:bg-emerald-900 text-emerald-950 dark:text-amber-200 shadow-sm'
-                    : 'text-slate-500 hover:text-emerald-900 dark:text-emerald-300/60 dark:hover:text-amber-200'
-                }`}
+                className={`flex-1 rounded-lg py-2 text-xs font-bold transition-all ${mode === 'signup'
+                  ? 'bg-white dark:bg-emerald-900 text-emerald-950 dark:text-amber-200 shadow-sm'
+                  : 'text-slate-500 hover:text-emerald-900 dark:text-emerald-300/60 dark:hover:text-amber-200'
+                  }`}
               >
                 Create Account
               </button>
@@ -205,37 +185,23 @@ export default function Login() {
               </p>
             </div>
 
-            {/* Instant Demo Access Button */}
-            <div className="mt-5">
-              <button
-                type="button"
-                onClick={handleDemoLogin}
-                disabled={isLoading}
-                className="group relative flex w-full items-center justify-between overflow-hidden rounded-xl border border-amber-400/40 bg-gradient-to-r from-amber-500/15 via-amber-400/10 to-transparent p-3 text-left transition-all hover:border-amber-400 hover:from-amber-500/25 dark:from-amber-400/10 dark:hover:from-amber-400/20 active:scale-[0.99] cursor-pointer"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="grid size-8 place-items-center rounded-lg bg-amber-500 text-slate-950 font-bold text-xs shadow-sm">
-                    ✦
-                  </div>
-                  <div>
-                    <strong className="block text-xs font-bold text-emerald-950 dark:text-amber-100">
-                      1-Click Demo Household
-                    </strong>
-                    <span className="block text-[11px] text-amber-700 dark:text-amber-300/80">
-                      Continue as Amna & Khalid
-                    </span>
-                  </div>
-                </div>
-                <ArrowRight size={16} className="text-amber-600 dark:text-amber-400 transition-transform group-hover:translate-x-1" />
-              </button>
-            </div>
 
-            <div className="relative my-5 text-center text-[11px] text-slate-400 dark:text-emerald-400/40">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-emerald-950/10 dark:border-emerald-900/40" />
+            {/* Error Banner */}
+            {error && (
+              <div className="mt-5 rounded-xl border border-red-400/40 bg-red-50/80 dark:bg-red-950/30 dark:border-red-700/40 px-4 py-3 text-xs font-medium text-red-700 dark:text-red-300 flex items-start gap-2">
+                <span className="mt-0.5 shrink-0">⚠</span>
+                <span>{error}</span>
               </div>
-              <span className="relative bg-white dark:bg-[#081e16] px-3">or continue with email</span>
-            </div>
+            )}
+
+            {/* Success Banner */}
+            {success && (
+              <div className="mt-5 rounded-xl border border-emerald-400/40 bg-emerald-50/80 dark:bg-emerald-950/30 dark:border-emerald-700/40 px-4 py-3 text-xs font-medium text-emerald-700 dark:text-emerald-300 flex items-start gap-2">
+                <span className="mt-0.5 shrink-0">✓</span>
+                <span>{success}</span>
+              </div>
+            )}
+
 
             {/* Email / Password Form */}
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -249,8 +215,8 @@ export default function Login() {
                     <Input
                       type="text"
                       placeholder="e.g. Amna & Khalid"
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
                       className="h-11 pl-10 bg-white dark:bg-[#061711] border-emerald-950/15 dark:border-emerald-800/40 text-emerald-950 dark:text-amber-100 font-medium"
                       required
                     />
@@ -267,8 +233,8 @@ export default function Login() {
                   <Input
                     type="email"
                     placeholder="you@household.app"
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     className="h-11 pl-10 bg-white dark:bg-[#061711] border-emerald-950/15 dark:border-emerald-800/40 text-emerald-950 dark:text-amber-100 font-medium"
                     required
                   />
@@ -294,8 +260,8 @@ export default function Login() {
                   <Input
                     type={showPassword ? 'text' : 'password'}
                     placeholder="••••••••"
-                    value={formData.password}
-                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     className="h-11 pl-10 pr-10 bg-white dark:bg-[#061711] border-emerald-950/15 dark:border-emerald-800/40 text-emerald-950 dark:text-amber-100 font-medium"
                     required
                   />
@@ -312,10 +278,10 @@ export default function Login() {
 
               <Button
                 type="submit"
-                disabled={isLoading}
+                disabled={loading}
                 className="mt-2 w-full h-11 py-2.5 rounded-xl bg-gradient-to-r from-emerald-900 via-emerald-800 to-emerald-950 dark:from-emerald-950 dark:via-emerald-900 dark:to-[#042419] text-amber-300 hover:text-amber-200 border border-amber-400/40 font-bold text-sm shadow-xl shadow-emerald-950/25 transition-all hover:scale-[1.01] active:scale-95"
               >
-                {isLoading ? (
+                {loading ? (
                   <span className="flex items-center gap-2">
                     <span className="size-4 animate-spin rounded-full border-2 border-amber-300 border-t-transparent" />
                     Authenticating...

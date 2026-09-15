@@ -9,15 +9,24 @@ import { useAuth } from '../hooks/useAuth'
 export default function Layout() {
   const { pathname } = useLocation()
   const { isDark, toggleTheme } = useTheme()
-  const { initials } = useAuth()
+  const { displayName, handleLogout } = useAuth()
+
+  // Get initials from displayName (username)
+  const initials = displayName
+    .split(/[\s&]+/)
+    .filter(Boolean)
+    .map((w) => w[0])
+    .slice(0, 2)
+    .join('')
+    .toUpperCase()
 
   const pageTitle =
     pathname === '/'
       ? 'Overview'
       : pathname
-          .slice(1)
-          .replace(/-/g, ' ')
-          .replace(/^[a-z]/, (letter) => letter.toUpperCase())
+        .slice(1)
+        .replace(/-/g, ' ')
+        .replace(/^[a-z]/, (letter) => letter.toUpperCase())
 
   return (
     <div className="h-screen w-screen overflow-hidden flex bg-[#f6f9f7] text-slate-900 dark:bg-[#05140f] dark:text-emerald-50 antialiased">

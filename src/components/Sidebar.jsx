@@ -12,6 +12,7 @@ import {
 } from '@/ui/dropdown-menu'
 import { useAuth } from '../hooks/useAuth'
 import { useTheme } from '../hooks/useTheme'
+import { useKharchaContext } from '../context/KharchaContext'
 
 const desktopMenu = [
   { label: 'Home', path: '/', icon: LayoutDashboard },
@@ -24,8 +25,17 @@ const desktopMenu = [
 
 export default function Sidebar() {
   const { pathname } = useLocation()
-  const { isDark, setIsDark } = useTheme()
-  const { user, initials, logout } = useAuth()
+  const { isDark, setIsDark } = useKharchaContext()
+  const { displayName, handleLogout } = useAuth()
+
+  // Get initials from username
+  const initials = displayName
+    .split(/[\s&]+/)
+    .filter(Boolean)
+    .map((w) => w[0])
+    .slice(0, 2)
+    .join('')
+    .toUpperCase()
 
   const handleQuickAdd = () => {
     window.dispatchEvent(new CustomEvent('open-add-expense'))
@@ -65,10 +75,9 @@ export default function Sidebar() {
               end={path === '/'}
               key={label}
               className={({ isActive }) =>
-                `group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all ${
-                  isActive
-                    ? 'bg-emerald-900 text-amber-300 shadow-md shadow-emerald-950/25 border-l-4 border-amber-400 font-semibold dark:bg-emerald-950/90 dark:text-amber-300'
-                    : 'text-slate-600 hover:bg-emerald-50 hover:text-emerald-950 dark:text-emerald-200/70 dark:hover:bg-emerald-950/50 dark:hover:text-amber-200'
+                `group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all ${isActive
+                  ? 'bg-emerald-900 text-amber-300 shadow-md shadow-emerald-950/25 border-l-4 border-amber-400 font-semibold dark:bg-emerald-950/90 dark:text-amber-300'
+                  : 'text-slate-600 hover:bg-emerald-50 hover:text-emerald-950 dark:text-emerald-200/70 dark:hover:bg-emerald-950/50 dark:hover:text-amber-200'
                 }`
               }
             >
@@ -78,16 +87,16 @@ export default function Sidebar() {
           ))}
         </nav>
 
-        {/* User profile dropdown with Shadcn Avatar & DropdownMenu */}
+        {/* User profile dropdown */}
         <div className="mt-auto border-t border-emerald-950/10 pt-4 dark:border-emerald-900/30">
           <DropdownMenu>
             <DropdownMenuTrigger className="flex w-full items-center gap-3 rounded-lg p-2 text-left hover:bg-emerald-50 transition-colors dark:hover:bg-emerald-950/60 outline-none">
-              <Avatar size="sm" className="bg-gradient-to-br from-amber-500 to-amber-700 text-white font-bold ring-1 ring-amber-400/40">
-                <AvatarFallback className="bg-gradient-to-br from-amber-500 to-amber-700 text-white text-xs font-bold">{initials}</AvatarFallback>
-              </Avatar>
+              <div className="size-9 rounded-full bg-gradient-to-br from-amber-500 to-amber-700 flex items-center justify-center text-white text-xs font-bold ring-1 ring-amber-400/40 shrink-0">
+                {initials}
+              </div>
               <div className="min-w-0 flex-1">
                 <strong className="block truncate text-xs font-bold text-emerald-950 dark:text-amber-100">
-                  {user?.name || 'Amna & Khalid'}
+                  {displayName}
                 </strong>
                 <span className="block truncate text-[10px] text-emerald-800/60 dark:text-amber-400/60">
                   Personal space
@@ -100,24 +109,16 @@ export default function Sidebar() {
                 <DropdownMenuLabel className="text-emerald-900 dark:text-amber-200">Household Account</DropdownMenuLabel>
                 <DropdownMenuSeparator className="bg-emerald-100 dark:bg-emerald-900/50" />
                 <DropdownMenuItem className="focus:bg-emerald-50 dark:focus:bg-emerald-900/40 focus:text-emerald-950 dark:focus:text-amber-200">
-                  <User className="mr-2 size-4 text-amber-600 dark:text-amber-400" /> {user?.email || 'amna.khalid@mykharcha.app'}
-                </DropdownMenuItem>
-                <DropdownMenuItem className="focus:bg-emerald-50 dark:focus:bg-emerald-900/40 focus:text-emerald-950 dark:focus:text-amber-200">
                   <Sparkles className="mr-2 size-4 text-amber-600 dark:text-amber-400" /> Monthly Review
                 </DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator className="bg-emerald-100 dark:bg-emerald-900/50" />
               <DropdownMenuItem
                 variant="destructive"
-                asChild
+                className="cursor-pointer"
+                onClick={handleLogout}
               >
-                <NavLink
-                  to="/login"
-                  onClick={logout}
-                  className="flex w-full items-center text-rose-600 dark:text-rose-400"
-                >
-                  <LogOut className="mr-2 size-4" /> Switch Workspace
-                </NavLink>
+                <LogOut className="mr-2 size-4" /> Sign Out
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -133,10 +134,9 @@ export default function Sidebar() {
             end
             aria-label="Home"
             className={({ isActive }) =>
-              `relative flex w-11 h-11 shrink-0 aspect-square items-center justify-center rounded-full transition-all duration-200 ${
-                isActive
-                  ? 'text-amber-300 font-bold bg-emerald-900 dark:bg-emerald-900/90 shadow-md shadow-emerald-950/20 scale-105'
-                  : 'text-slate-500 hover:text-emerald-900 dark:text-emerald-200/60 dark:hover:text-amber-200 hover:bg-emerald-50/80 dark:hover:bg-emerald-950/40'
+              `relative flex w-11 h-11 shrink-0 aspect-square items-center justify-center rounded-full transition-all duration-200 ${isActive
+                ? 'text-amber-300 font-bold bg-emerald-900 dark:bg-emerald-900/90 shadow-md shadow-emerald-950/20 scale-105'
+                : 'text-slate-500 hover:text-emerald-900 dark:text-emerald-200/60 dark:hover:text-amber-200 hover:bg-emerald-50/80 dark:hover:bg-emerald-950/40'
               }`
             }
           >
@@ -150,10 +150,9 @@ export default function Sidebar() {
             to="/calendar"
             aria-label="Calendar"
             className={({ isActive }) =>
-              `relative flex w-11 h-11 shrink-0 aspect-square items-center justify-center rounded-full transition-all duration-200 ${
-                isActive
-                  ? 'text-amber-300 font-bold bg-emerald-900 dark:bg-emerald-900/90 shadow-md shadow-emerald-950/20 scale-105'
-                  : 'text-slate-500 hover:text-emerald-900 dark:text-emerald-200/60 dark:hover:text-amber-200 hover:bg-emerald-50/80 dark:hover:bg-emerald-950/40'
+              `relative flex w-11 h-11 shrink-0 aspect-square items-center justify-center rounded-full transition-all duration-200 ${isActive
+                ? 'text-amber-300 font-bold bg-emerald-900 dark:bg-emerald-900/90 shadow-md shadow-emerald-950/20 scale-105'
+                : 'text-slate-500 hover:text-emerald-900 dark:text-emerald-200/60 dark:hover:text-amber-200 hover:bg-emerald-50/80 dark:hover:bg-emerald-950/40'
               }`
             }
           >
@@ -180,10 +179,9 @@ export default function Sidebar() {
             to="/expenses"
             aria-label="Expenses"
             className={({ isActive }) =>
-              `relative flex w-11 h-11 shrink-0 aspect-square items-center justify-center rounded-full transition-all duration-200 ${
-                isActive
-                  ? 'text-amber-300 font-bold bg-emerald-900 dark:bg-emerald-900/90 shadow-md shadow-emerald-950/20 scale-105'
-                  : 'text-slate-500 hover:text-emerald-900 dark:text-emerald-200/60 dark:hover:text-amber-200 hover:bg-emerald-50/80 dark:hover:bg-emerald-950/40'
+              `relative flex w-11 h-11 shrink-0 aspect-square items-center justify-center rounded-full transition-all duration-200 ${isActive
+                ? 'text-amber-300 font-bold bg-emerald-900 dark:bg-emerald-900/90 shadow-md shadow-emerald-950/20 scale-105'
+                : 'text-slate-500 hover:text-emerald-900 dark:text-emerald-200/60 dark:hover:text-amber-200 hover:bg-emerald-50/80 dark:hover:bg-emerald-950/40'
               }`
             }
           >
@@ -196,11 +194,10 @@ export default function Sidebar() {
           <DropdownMenu>
             <DropdownMenuTrigger
               aria-label="More"
-              className={`relative flex w-11 h-11 shrink-0 aspect-square items-center justify-center rounded-full transition-all duration-200 outline-none ${
-                isMoreActive
-                  ? 'text-amber-300 font-bold bg-emerald-900 dark:bg-emerald-900/90 shadow-md shadow-emerald-950/20 scale-105'
-                  : 'text-slate-500 hover:text-emerald-900 dark:text-emerald-200/60 dark:hover:text-amber-200 hover:bg-emerald-50/80 dark:hover:bg-emerald-950/40'
-              }`}
+              className={`relative flex w-11 h-11 shrink-0 aspect-square items-center justify-center rounded-full transition-all duration-200 outline-none ${isMoreActive
+                ? 'text-amber-300 font-bold bg-emerald-900 dark:bg-emerald-900/90 shadow-md shadow-emerald-950/20 scale-105'
+                : 'text-slate-500 hover:text-emerald-900 dark:text-emerald-200/60 dark:hover:text-amber-200 hover:bg-emerald-50/80 dark:hover:bg-emerald-950/40'
+                }`}
             >
               <MoreHorizontal size={20} className={isMoreActive ? 'text-amber-300' : ''} />
             </DropdownMenuTrigger>

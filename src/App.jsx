@@ -1,5 +1,6 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { createBrowserRouter, Navigate, Outlet, RouterProvider } from 'react-router-dom'
 import { KharchaProvider } from './context/KharchaContext'
+import { useAuth } from './hooks/useAuth'
 import Layout from './components/Layout'
 import Dashboard from './pages/Dashboard'
 import Calendar from './pages/Calendar'
@@ -8,21 +9,31 @@ import Insights from './pages/Insights'
 import Settings from './pages/Settings'
 import Login from './pages/Login'
 
+function ProtectedRoute() {
+  const { isLoggedIn } = useAuth()
+  return isLoggedIn ? <Outlet /> : <Navigate to="/login" replace />
+}
+
 const router = createBrowserRouter([
   {
     path: '/login',
     element: <Login />,
   },
   {
-    path: '/',
-    element: <Layout />,
+    element: <ProtectedRoute />,
     children: [
-      { index: true, element: <Dashboard /> },
-      { path: 'calendar', element: <Calendar /> },
-      { path: 'expenses', element: <Expenses /> },
-      { path: 'summary', element: <Insights /> },
-      { path: 'history', element: <Insights /> },
-      { path: 'settings', element: <Settings /> },
+      {
+        path: '/',
+        element: <Layout />,
+        children: [
+          { index: true, element: <Dashboard /> },
+          { path: 'calendar', element: <Calendar /> },
+          { path: 'expenses', element: <Expenses /> },
+          { path: 'summary', element: <Insights /> },
+          { path: 'history', element: <Insights /> },
+          { path: 'settings', element: <Settings /> },
+        ],
+      },
     ],
   },
 ])

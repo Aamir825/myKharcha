@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useKharchaContext } from '../context/KharchaContext'
 import { getMonthId } from '../utils/formatters'
+import { useAuth } from './useAuth'
 
 export function useDashboard() {
   const {
-    user,
     expenses,
     categories,
     budget,
@@ -12,6 +12,7 @@ export function useDashboard() {
     updateExpense,
     deleteExpense,
   } = useKharchaContext()
+  const { displayName } = useAuth()
 
   const [monthDate, setMonthDate] = useState(new Date(2026, 8, 1))
   const [selectedDate, setSelectedDate] = useState('2026-09-14')
@@ -140,7 +141,7 @@ export function useDashboard() {
   }, [selectedDate])
 
   return {
-    user,
+    displayName,
     monthDate,
     selectedDate,
     selectedExpenses,

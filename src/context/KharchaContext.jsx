@@ -26,27 +26,12 @@ const readExpenses = () => {
   }
 }
 
-const readUser = () => {
-  try {
-    return (
-      JSON.parse(localStorage.getItem('mykharcha-user')) || {
-        name: 'Amna & Khalid',
-        email: 'amna.khalid@mykharcha.app',
-        isLoggedIn: true,
-      }
-    )
-  } catch {
-    return { name: 'Amna & Khalid', email: 'amna.khalid@mykharcha.app', isLoggedIn: true }
-  }
-}
-
 const KharchaContext = createContext(null)
 
 export function KharchaProvider({ children }) {
   const [expenses, setExpenses] = useState(readExpenses)
   const [categories, setCategories] = useState(defaultCategories)
   const [budget, setBudget] = useState(() => Number(localStorage.getItem('mykharcha-budget')) || 140000)
-  const [user, setUser] = useState(readUser)
   const [isDark, setIsDark] = useState(() => localStorage.getItem('mykharcha-theme') === 'dark')
 
   useEffect(() => {
@@ -69,18 +54,6 @@ export function KharchaProvider({ children }) {
     if (!nextBudget || nextBudget < 0) return
     setBudget(nextBudget)
     localStorage.setItem('mykharcha-budget', String(nextBudget))
-  }
-
-  const login = (userData) => {
-    const nextUser = { ...userData, isLoggedIn: true }
-    setUser(nextUser)
-    localStorage.setItem('mykharcha-user', JSON.stringify(nextUser))
-  }
-
-  const logout = () => {
-    const nextUser = { name: '', email: '', isLoggedIn: false }
-    setUser(nextUser)
-    localStorage.removeItem('mykharcha-user')
   }
 
   const addExpense = (data) => {
@@ -114,13 +87,10 @@ export function KharchaProvider({ children }) {
         expenses,
         categories,
         budget,
-        user,
         isDark,
         setCategories,
         setIsDark,
         saveBudget,
-        login,
-        logout,
         addExpense,
         updateExpense,
         deleteExpense,
