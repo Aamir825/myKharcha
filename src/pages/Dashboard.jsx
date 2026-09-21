@@ -279,7 +279,7 @@ export default function Dashboard() {
           </div>
           <Button
             variant="ghost"
-            className="mt-4 w-full justify-start text-xs font-bold text-emerald-900 hover:text-emerald-950 hover:bg-emerald-50 dark:text-amber-300 dark:hover:bg-emerald-950/60"
+            className="mt-6 w-full h-11 py-2.5 bg-emerald-900 hover:bg-emerald-800 text-amber-200 hover:text-amber-200 dark:hover:bg-emerald-800 border border-amber-400/30 font-semibold rounded-xl text-sm shadow-md transition-all hover:scale-[1.01]"
             onClick={() => openAdd(selectedDate)}
           >
             <Plus size={16} className="mr-1.5 text-amber-500" />
