@@ -115,6 +115,15 @@
   --sidebar-accent-foreground: oklch(0.30 0.09 155);
   --sidebar-border: oklch(0.91 0.015 145);
   --sidebar-ring: oklch(0.72 0.15 75);
+
+  --category-rent: #047857;
+  --category-grocery: #d97706;
+  --category-electricity: #059669;
+  --category-vehicle: #b45309;
+  --category-gas: #0d9488;
+  --category-water: #0284c7;
+  --category-uncle: #ca8a04;
+  --category-medical: #e11d48;
 }
 
 .dark {

@@ -9,7 +9,7 @@ import { useAuth } from '../hooks/useAuth'
 export default function Layout() {
   const { pathname } = useLocation()
   const { isDark, toggleTheme } = useTheme()
-  const { displayName, handleLogout } = useAuth()
+  const { displayName } = useAuth()
 
   // Get initials from displayName (username)
   const initials = displayName

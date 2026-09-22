@@ -8,13 +8,17 @@ import { money } from '../utils/formatters'
 
 const monthLabel = (date) =>
   date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
-const dateLabel = (date) =>
-  date === '2026-09-14' ? 'Today · September 14' : date
+const dateLabel = (date) => {
+  const todayStr = new Date().toISOString().split('T')[0]
+  if (date === todayStr) {
+    return `Today · ${new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}`
+  }
+  return date
+}
 const labelClass = 'text-[10px] font-bold uppercase tracking-widest text-emerald-800/60 dark:text-amber-400/60'
 
 export default function Dashboard() {
   const {
-    user,
     displayName,
     monthDate,
     selectedDate,
@@ -34,6 +38,7 @@ export default function Dashboard() {
     editingExpense,
     deletingExpense,
     isDeleteOpen,
+    defaultDate,
     setSelectedDate,
     setIsAddOpen,
     setIsDeleteOpen,
@@ -46,16 +51,20 @@ export default function Dashboard() {
     confirmDelete,
   } = useDashboard()
 
-
+  const todayFormatted = new Date().toLocaleDateString('en-US', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+  })
 
   return (
     <div className="space-y-6">
       {/* Top Banner Header */}
       <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-end">
         <div>
-          <p className={labelClass}>Monday, 14 September</p>
+          <p className={labelClass}>{todayFormatted}</p>
           <h1 className="mt-1.5 font-display text-3xl font-extrabold tracking-tight text-emerald-950 md:text-4xl dark:text-amber-100">
-            Good morning, {displayName} <span className="text-amber-400">✦</span>
+            Good day, {displayName} <span className="text-amber-400">✦</span>
           </h1>
           <p className="mt-1.5 text-sm text-slate-500 dark:text-emerald-200/70">
             Here’s how your household is doing this month.
@@ -63,7 +72,7 @@ export default function Dashboard() {
         </div>
         <Button
           onClick={() => openAdd(selectedDate)}
-          className="h-11 md:flex hidden  px-5 py-2.5 bg-emerald-900 hover:bg-emerald-800 text-amber-200 border border-amber-400/30 shadow-md shadow-emerald-950/20 font-semibold rounded-xl text-sm transition-all hover:scale-[1.02]"
+          className="h-11 md:flex hidden px-5 py-2.5 bg-emerald-900 hover:bg-emerald-800 text-amber-200 border border-amber-400/30 shadow-md shadow-emerald-950/20 font-semibold rounded-xl text-sm transition-all hover:scale-[1.02]"
         >
           <Plus size={19} className="mr-1.5 text-amber-300" />
           Add expense
@@ -149,9 +158,9 @@ export default function Dashboard() {
       <div className="grid gap-4 lg:grid-cols-[1.45fr_1fr]">
         <Card className="p-5 bg-white dark:bg-[#0a2019] border-emerald-950/10 dark:border-emerald-900/30">
           <PanelHeading label="Spending rhythm" title="Where your money goes">
-            <Button variant="outline" size="sm" className="text-xs border-emerald-900/20 dark:border-emerald-800/40 text-emerald-900 dark:text-amber-200">
-              This month <ChevronRight size={14} className="ml-1" />
-            </Button>
+            <span className="text-xs text-emerald-800/60 dark:text-amber-400/70 font-semibold">
+              {monthLabel(monthDate)}
+            </span>
           </PanelHeading>
           <div className="mt-6 flex h-52 gap-3 border-b border-emerald-950/10 dark:border-emerald-900/30">
             <div className="flex flex-col justify-between pb-5 text-[9px] text-emerald-800/50 dark:text-emerald-300/40">
@@ -171,9 +180,9 @@ export default function Dashboard() {
                       : 'bg-emerald-950/10 dark:bg-emerald-950/40'
                       } sm:w-3`}
                     style={{ height: `${Math.max(3, (total / maxDaily) * 100)}%` }}
-                    title={`${index + 1} Sep · ${money(total)}`}
+                    title={`${index + 1} ${monthLabel(monthDate).split(' ')[0]} · ${money(total)}`}
                   />
-                  {[0, 6, 13, 20, 27, 29].includes(index) && (
+                  {[0, 6, 13, 20, 27, dailyTotals.length - 1].includes(index) && (
                     <span className="text-[9px] text-emerald-800/60 dark:text-emerald-300/50">{index + 1}</span>
                   )}
                 </div>
@@ -201,32 +210,38 @@ export default function Dashboard() {
             </Button>
           </PanelHeading>
           <div className="mt-6 space-y-4">
-            {categoryTotals.map((category) => (
-              <div className="flex items-center gap-3" key={category.name}>
-                <div className="grid size-9 place-items-center rounded-lg bg-emerald-50 text-emerald-800 dark:bg-emerald-950/80 dark:text-amber-300 shrink-0 border border-emerald-900/10 dark:border-emerald-800/30">
-                  <WalletCards size={17} />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <div className="flex justify-between gap-3 text-xs">
-                    <span className="truncate font-medium text-emerald-950 dark:text-emerald-100">
-                      {category.name}
-                    </span>
-                    <b className="font-semibold text-emerald-950 dark:text-amber-200">
-                      {money(category.total)}
-                    </b>
+            {categoryTotals.length ? (
+              categoryTotals.map((category) => (
+                <div className="flex items-center gap-3" key={category.name}>
+                  <div className="grid size-9 place-items-center rounded-lg bg-emerald-50 text-emerald-800 dark:bg-emerald-950/80 dark:text-amber-300 shrink-0 border border-emerald-900/10 dark:border-emerald-800/30">
+                    <WalletCards size={17} />
                   </div>
-                  <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-emerald-950/10 dark:bg-emerald-950/50">
-                    <span
-                      className="block h-full rounded-full transition-all duration-500 shadow-sm"
-                      style={{
-                        width: `${Math.max(8, (category.total / Math.max(spent, 1)) * 100)}%`,
-                        background: category.color,
-                      }}
-                    />
+                  <div className="min-w-0 flex-1">
+                    <div className="flex justify-between gap-3 text-xs">
+                      <span className="truncate font-medium text-emerald-950 dark:text-emerald-100">
+                        {category.name}
+                      </span>
+                      <b className="font-semibold text-emerald-950 dark:text-amber-200">
+                        {money(category.total)}
+                      </b>
+                    </div>
+                    <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-emerald-950/10 dark:bg-emerald-950/50">
+                      <span
+                        className="block h-full rounded-full transition-all duration-500 shadow-sm"
+                        style={{
+                          width: `${Math.max(8, (category.total / Math.max(spent, 1)) * 100)}%`,
+                          background: category.color,
+                        }}
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))
+            ) : (
+              <p className="py-8 text-center text-xs text-slate-400 dark:text-emerald-300/60">
+                No categorized spending this month
+              </p>
+            )}
           </div>
         </Card>
       </div>
@@ -234,12 +249,13 @@ export default function Dashboard() {
       {/* Activity & Selected Day Expenses Row */}
       <div className="grid gap-4 lg:grid-cols-[1.1fr_1fr]">
         <Card className="p-5 bg-white dark:bg-[#0a2019] border-emerald-950/10 dark:border-emerald-900/30">
-          <PanelHeading label="Activity" title="September calendar">
-            <Button variant="outline" size="sm" className="text-xs border-emerald-900/20 dark:border-emerald-800/40 text-emerald-900 dark:text-amber-200">
-              Open calendar <ChevronRight size={14} className="ml-1" />
-            </Button>
+          <PanelHeading label="Activity" title={`${monthLabel(monthDate)} calendar`}>
+            <span className="text-xs text-emerald-800/60 dark:text-amber-400/70 font-semibold">
+              Tap day to inspect
+            </span>
           </PanelHeading>
           <CalendarGrid
+            monthDate={monthDate}
             dailyTotals={dailyTotals}
             selectedDate={selectedDate}
             setSelectedDate={setSelectedDate}
@@ -269,7 +285,7 @@ export default function Dashboard() {
                 <Button
                   variant="link"
                   size="sm"
-                  className="text-emerald-800 dark:text-amber-400 font-semibold"
+                  className="text-emerald-800 dark:text-amber-400 font-semibold cursor-pointer"
                   onClick={() => openAdd(selectedDate)}
                 >
                   Add one
@@ -288,17 +304,17 @@ export default function Dashboard() {
         </Card>
       </div>
 
-      {/* Add / Edit Expense Dialog Component */}
+      {/* Expense Dialog */}
       <ExpenseDialog
         open={isAddOpen}
         onOpenChange={setIsAddOpen}
         expense={editingExpense}
         categories={categories}
-        defaultDate={selectedDate}
+        defaultDate={defaultDate || selectedDate}
         onSave={saveExpense}
       />
 
-      {/* Delete Confirmation Dialog Component */}
+      {/* Delete Confirmation Dialog */}
       <DeleteConfirmDialog
         open={isDeleteOpen}
         onOpenChange={setIsDeleteOpen}
@@ -337,7 +353,10 @@ function PanelHeading({ label, title, children }) {
   )
 }
 
-function CalendarGrid({ dailyTotals, selectedDate, setSelectedDate }) {
+function CalendarGrid({ monthDate, dailyTotals, selectedDate, setSelectedDate }) {
+  const year = monthDate.getFullYear()
+  const month = String(monthDate.getMonth() + 1).padStart(2, '0')
+
   return (
     <>
       <div className="mt-6 grid grid-cols-7 gap-1 text-center text-[10px] font-semibold text-emerald-800/60 dark:text-amber-400/60">
@@ -346,9 +365,8 @@ function CalendarGrid({ dailyTotals, selectedDate, setSelectedDate }) {
         ))}
       </div>
       <div className="mt-2 grid grid-cols-7 gap-1">
-        {Array.from({ length: 30 }, (_, index) => {
-          const date = `2026-09-${String(index + 1).padStart(2, '0')}`
-          const total = dailyTotals[index]
+        {dailyTotals.map((total, index) => {
+          const date = `${year}-${month}-${String(index + 1).padStart(2, '0')}`
           const isSelected = selectedDate === date
           return (
             <button

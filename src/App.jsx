@@ -1,5 +1,4 @@
 import { createBrowserRouter, Navigate, Outlet, RouterProvider } from 'react-router-dom'
-import { KharchaProvider } from './context/KharchaContext'
 import { useAuth } from './hooks/useAuth'
 import Layout from './components/Layout'
 import Dashboard from './pages/Dashboard'
@@ -39,9 +38,5 @@ const router = createBrowserRouter([
 ])
 
 export default function App() {
-  return (
-    <KharchaProvider>
-      <RouterProvider router={router} />
-    </KharchaProvider>
-  )
+  return <RouterProvider router={router} />
 }

@@ -1,25 +1,30 @@
-import { useEffect, useMemo, useState } from 'react'
-import { useKharchaContext } from '../context/KharchaContext'
+import { useMemo, useState } from 'react'
+import { categories } from '../lib/constants'
 import { getMonthId } from '../utils/formatters'
+import { useExpensesData } from './useExpensesData'
 
 export function useExpenses() {
   const {
     expenses,
-    categories,
-    addExpense,
-    updateExpense,
-    deleteExpense,
-    persistExpenses,
-  } = useKharchaContext()
+    isAddOpen,
+    editingExpense,
+    isDeleteOpen,
+    deletingExpense,
+    defaultDate,
+    openAdd,
+    openEdit,
+    setIsAddOpen,
+    openDelete,
+    setIsDeleteOpen,
+    saveExpense,
+    confirmDelete,
+  } = useExpensesData()
 
-  const [monthDate] = useState(new Date(2026, 8, 1))
+  const now = new Date()
+
+  const [monthDate] = useState(new Date(now.getFullYear(), now.getMonth(), 1))
   const [searchTerm, setSearchTerm] = useState('')
   const [filterCategory, setFilterCategory] = useState('All categories')
-
-  const [isAddOpen, setIsAddOpen] = useState(false)
-  const [editingExpense, setEditingExpense] = useState(null)
-  const [deletingExpense, setDeletingExpense] = useState(null)
-  const [isDeleteOpen, setIsDeleteOpen] = useState(false)
 
   const monthId = getMonthId(monthDate)
 
@@ -46,48 +51,6 @@ export function useExpenses() {
     [filteredExpenses]
   )
 
-  const openAdd = () => {
-    setEditingExpense(null)
-    setIsAddOpen(true)
-  }
-
-  const openEdit = (expense) => {
-    setEditingExpense(expense)
-    setIsAddOpen(true)
-  }
-
-  const openDelete = (expense) => {
-    setDeletingExpense(expense)
-    setIsDeleteOpen(true)
-  }
-
-  const saveExpense = (data) => {
-    if (!data.amount || Number(data.amount) <= 0) return
-    if (data.id) {
-      updateExpense(data.id, data)
-    } else {
-      addExpense(data)
-    }
-    setEditingExpense(null)
-    setIsAddOpen(false)
-  }
-
-  const confirmDelete = (id) => {
-    const targetId = id || deletingExpense?.id
-    if (!targetId) return
-    deleteExpense(targetId)
-    setDeletingExpense(null)
-    setIsDeleteOpen(false)
-  }
-
-  useEffect(() => {
-    const handleOpenAdd = () => {
-      openAdd()
-    }
-    window.addEventListener('open-add-expense', handleOpenAdd)
-    return () => window.removeEventListener('open-add-expense', handleOpenAdd)
-  }, [])
-
   return {
     monthDate,
     categories,
@@ -95,12 +58,14 @@ export function useExpenses() {
     totalFiltered,
     searchTerm,
     filterCategory,
+    setSearchTerm,
+    setFilterCategory,
+    // Delegated Modal State & Actions
     isAddOpen,
     editingExpense,
     deletingExpense,
     isDeleteOpen,
-    setSearchTerm,
-    setFilterCategory,
+    defaultDate,
     setIsAddOpen,
     setIsDeleteOpen,
     openAdd,
@@ -108,6 +73,5 @@ export function useExpenses() {
     openDelete,
     saveExpense,
     confirmDelete,
-    persistExpenses,
   }
 }

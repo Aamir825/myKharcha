@@ -1,26 +1,26 @@
-import { Category } from "../types"
-
-export const categories: Category[] = [
-  { name: 'Home Rent', color: 'var(--category-rent)' },
-  { name: 'Grocery', color: 'var(--category-grocery)' },
-  { name: 'Electricity Bill', color: 'var(--category-electricity)' },
-  { name: 'Vehicle Gas', color: 'var(--category-vehicle)' },
-  { name: 'Gas Bill', color: 'var(--category-gas)' },
-  { name: 'Water Bill', color: 'var(--category-water)' },
-  { name: 'Uncle Store Payment', color: 'var(--category-uncle)' },
+export const categories = [
+  { name: 'Home Rent', color: '#047857' },
+  { name: 'Grocery', color: '#d97706' },
+  { name: 'Electricity Bill', color: '#059669' },
+  { name: 'Vehicle Gas', color: '#b45309' },
+  { name: 'Gas Bill', color: '#0d9488' },
+  { name: 'Water Bill', color: '#0284c7' },
+  { name: 'Uncle Store Payment', color: '#ca8a04' },
+  { name: 'Doctor & Medical', color: '#e11d48' },
 ]
 
-export const categoryColors: Record<string, string> = {
-  'Home Rent': 'bg-indigo-500',
+export const categoryColors = {
+  'Home Rent': 'bg-emerald-600',
   'Grocery': 'bg-amber-500',
   'Electricity Bill': 'bg-emerald-500',
-  'Vehicle Gas': 'bg-violet-500',
-  'Gas Bill': 'bg-cyan-500',
-  'Water Bill': 'bg-blue-500',
-  'Uncle Store Payment': 'bg-pink-500',
+  'Vehicle Gas': 'bg-amber-700',
+  'Gas Bill': 'bg-teal-600',
+  'Water Bill': 'bg-sky-600',
+  'Uncle Store Payment': 'bg-yellow-600',
+  'Doctor & Medical': 'bg-rose-600',
 }
 
-export const categoryIcons: Record<string, string> = {
+export const categoryIcons = {
   'Home Rent': 'Building2',
   'Grocery': 'ShoppingBasket',
   'Electricity Bill': 'Zap',
@@ -28,4 +28,5 @@ export const categoryIcons: Record<string, string> = {
   'Gas Bill': 'Flame',
   'Water Bill': 'Drop',
   'Uncle Store Payment': 'Store',
+  'Doctor & Medical': 'Stethoscope',
 }

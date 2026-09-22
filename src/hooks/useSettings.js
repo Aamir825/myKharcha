@@ -1,14 +1,20 @@
-import { useState } from 'react'
-import { useKharchaContext } from '../context/KharchaContext'
+import { useEffect, useState } from 'react'
+import { useBudget } from './useBudget'
+import { useTheme } from './useTheme'
 
 export function useSettings() {
-  const { budget, saveBudget, isDark, setIsDark } = useKharchaContext()
+  const { budget, saveBudget } = useBudget()
+  const { isDark, setIsDark } = useTheme()
   const [value, setValue] = useState(String(budget))
   const [saved, setSaved] = useState(false)
 
-  const submit = (event) => {
+  useEffect(() => {
+    setValue(String(budget))
+  }, [budget])
+
+  const submit = async (event) => {
     event.preventDefault()
-    saveBudget(value)
+    await saveBudget(value)
     setSaved(true)
     setTimeout(() => setSaved(false), 3000)
   }

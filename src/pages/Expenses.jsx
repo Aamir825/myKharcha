@@ -17,13 +17,14 @@ export default function Expenses() {
     totalFiltered,
     searchTerm,
     filterCategory,
-    setSearchTerm,
-    setFilterCategory,
     isAddOpen,
-    setIsAddOpen,
     editingExpense,
     deletingExpense,
     isDeleteOpen,
+    defaultDate,
+    setSearchTerm,
+    setFilterCategory,
+    setIsAddOpen,
     setIsDeleteOpen,
     openAdd,
     openEdit,
@@ -64,7 +65,18 @@ export default function Expenses() {
             onValueChange={(val) => setFilterCategory(val)}
           >
             <SelectTrigger className="h-10 w-full sm:w-48 bg-white dark:bg-[#0a2019] border-emerald-950/15 dark:border-emerald-900/30 text-emerald-950 dark:text-amber-100">
-              <SelectValue placeholder="All categories" />
+              <div className="flex items-center gap-2">
+                <span
+                  className="size-2.5 rounded-full shrink-0 shadow-xs"
+                  style={{
+                    backgroundColor:
+                      filterCategory === 'All categories'
+                        ? '#059669'
+                        : categories.find((c) => c.name === filterCategory)?.color || '#059669',
+                  }}
+                />
+                <span className="truncate">{filterCategory}</span>
+              </div>
             </SelectTrigger>
             <SelectContent className="dark:bg-[#0c241b] border-emerald-900/40">
               <SelectItem value="All categories">
@@ -165,12 +177,13 @@ export default function Expenses() {
         )}
       </Card>
 
-      {/* Add / Edit Expense Dialog */}
+      {/* Expense Dialog */}
       <ExpenseDialog
         open={isAddOpen}
         onOpenChange={setIsAddOpen}
         expense={editingExpense}
         categories={categories}
+        defaultDate={defaultDate}
         onSave={saveExpense}
       />
 

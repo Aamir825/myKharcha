@@ -1,13 +1,20 @@
 import { useMemo } from 'react'
 import { useLocation } from 'react-router-dom'
-import { useKharchaContext } from '../context/KharchaContext'
+import { categories } from '../lib/constants'
 import { getMonthId } from '../utils/formatters'
+import { useBudget } from './useBudget'
+import { useExpensesData } from './useExpensesData'
 
 export function useInsights() {
   const isHistory = useLocation().pathname === '/history'
-  const { expenses, categories, budget } = useKharchaContext()
+  const { expenses } = useExpensesData()
+  const { budget } = useBudget()
 
-  const currentMonthDate = useMemo(() => new Date(2026, 8, 1), [])
+  const now = new Date()
+  const currentMonthDate = useMemo(
+    () => new Date(now.getFullYear(), now.getMonth(), 1),
+    []
+  )
   const currentMonthId = getMonthId(currentMonthDate)
 
   const monthExpenses = useMemo(
@@ -28,7 +35,7 @@ export function useInsights() {
     0
   ).getDate()
 
-  const remainingDays = Math.max(0, daysInMonth - new Date().getDate())
+  const remainingDays = Math.max(0, daysInMonth - now.getDate())
 
   const categoryTotals = useMemo(
     () =>
@@ -58,7 +65,17 @@ export function useInsights() {
   const activeDays = dailyTotals.filter(Boolean).length
   const highest = Math.max(...dailyTotals, 0)
   const highestDay = Math.max(0, dailyTotals.indexOf(highest)) + 1
-  const monthNames = ['June', 'July', 'August', 'September']
+
+  // Dynamic previous 4 months
+  const monthNames = useMemo(() => {
+    const names = []
+    for (let i = 3; i >= 0; i--) {
+      const d = new Date(now.getFullYear(), now.getMonth() - i, 1)
+      names.push(d.toLocaleDateString('en-US', { month: 'long' }))
+    }
+    return names
+  }, [])
+
   const historyValues = [88500, 91200, 82450, spent]
 
   return {

@@ -1,6 +1,5 @@
-import { ArrowUpRight, BarChart3, CalendarDays, Ellipsis, LayoutDashboard, LogOut, Moon, MoreHorizontal, Plus, Settings2, Sparkles, Sun, TrendingUp, User, WalletCards } from 'lucide-react'
+import { ArrowUpRight, BarChart3, CalendarDays, Ellipsis, LayoutDashboard, LogOut, Moon, MoreHorizontal, Plus, Settings2, Sparkles, Sun, TrendingUp, WalletCards } from 'lucide-react'
 import { NavLink, useLocation } from 'react-router-dom'
-import { Avatar, AvatarFallback } from '@/ui/avatar'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,7 +11,6 @@ import {
 } from '@/ui/dropdown-menu'
 import { useAuth } from '../hooks/useAuth'
 import { useTheme } from '../hooks/useTheme'
-import { useKharchaContext } from '../context/KharchaContext'
 
 const desktopMenu = [
   { label: 'Home', path: '/', icon: LayoutDashboard },
@@ -25,7 +23,7 @@ const desktopMenu = [
 
 export default function Sidebar() {
   const { pathname } = useLocation()
-  const { isDark, setIsDark } = useKharchaContext()
+  const { isDark, setIsDark } = useTheme()
   const { displayName, handleLogout } = useAuth()
 
   // Get initials from username

@@ -1,23 +1,33 @@
-import { useEffect, useMemo, useState } from 'react'
-import { useKharchaContext } from '../context/KharchaContext'
+import { useMemo, useState } from 'react'
+import { categories } from '../lib/constants'
 import { getMonthId } from '../utils/formatters'
+import { useExpensesData } from './useExpensesData'
 
 export function useCalendar() {
   const {
     expenses,
-    categories,
-    addExpense,
-    updateExpense,
-    deleteExpense,
-  } = useKharchaContext()
+    isAddOpen,
+    editingExpense,
+    isDeleteOpen,
+    deletingExpense,
+    defaultDate,
+    openAdd,
+    openEdit,
+    setIsAddOpen,
+    openDelete,
+    setIsDeleteOpen,
+    saveExpense,
+    confirmDelete,
+  } = useExpensesData()
 
-  const [monthDate, setMonthDate] = useState(new Date(2026, 8, 1))
-  const [selectedDate, setSelectedDate] = useState('2026-09-14')
+  const now = new Date()
 
-  const [isAddOpen, setIsAddOpen] = useState(false)
-  const [editingExpense, setEditingExpense] = useState(null)
-  const [deletingExpense, setDeletingExpense] = useState(null)
-  const [isDeleteOpen, setIsDeleteOpen] = useState(false)
+  const [monthDate, setMonthDate] = useState(
+    new Date(now.getFullYear(), now.getMonth(), 1)
+  )
+  const [selectedDate, setSelectedDate] = useState(
+    now.toISOString().split('T')[0]
+  )
 
   const monthId = getMonthId(monthDate)
 
@@ -57,50 +67,9 @@ export function useCalendar() {
       new Date(monthDate.getFullYear(), monthDate.getMonth() + offset, 1)
     )
 
-  const openAdd = (date = selectedDate) => {
-    setEditingExpense(null)
-    setSelectedDate(date)
-    setIsAddOpen(true)
+  const handleOpenAddForSelected = (date = selectedDate) => {
+    openAdd(date)
   }
-
-  const openEdit = (expense) => {
-    setEditingExpense(expense)
-    setIsAddOpen(true)
-  }
-
-  const openDelete = (expense) => {
-    setDeletingExpense(expense)
-    setIsDeleteOpen(true)
-  }
-
-  const saveExpense = (data) => {
-    if (!data.amount || Number(data.amount) <= 0) return
-    if (data.id) {
-      updateExpense(data.id, data)
-    } else {
-      addExpense(data)
-      setSelectedDate(data.date)
-    }
-    setEditingExpense(null)
-    setIsAddOpen(false)
-  }
-
-  const confirmDelete = (id) => {
-    const targetId = id || deletingExpense?.id
-    if (!targetId) return
-    deleteExpense(targetId)
-    setDeletingExpense(null)
-    setIsDeleteOpen(false)
-  }
-
-  useEffect(() => {
-    const handleOpenAdd = (event) => {
-      const date = event.detail?.date || selectedDate
-      openAdd(date)
-    }
-    window.addEventListener('open-add-expense', handleOpenAdd)
-    return () => window.removeEventListener('open-add-expense', handleOpenAdd)
-  }, [selectedDate])
 
   return {
     monthDate,
@@ -109,15 +78,18 @@ export function useCalendar() {
     selectedExpenses,
     selectedTotal,
     categories,
+    daysInMonth,
+    // Delegated Modal State & Actions
     isAddOpen,
     editingExpense,
     deletingExpense,
     isDeleteOpen,
+    defaultDate,
     setSelectedDate,
     setIsAddOpen,
     setIsDeleteOpen,
     changeMonth,
-    openAdd,
+    openAdd: handleOpenAddForSelected,
     openEdit,
     openDelete,
     saveExpense,

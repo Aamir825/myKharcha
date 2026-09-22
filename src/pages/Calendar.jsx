@@ -14,27 +14,25 @@ export default function Calendar() {
     selectedDate,
     selectedExpenses,
     selectedTotal,
-    setSelectedDate,
-    openAdd,
-    openEdit,
-    openDelete,
-    changeMonth,
     categories,
     isAddOpen,
-    setIsAddOpen,
     editingExpense,
     deletingExpense,
     isDeleteOpen,
+    defaultDate,
+    setSelectedDate,
+    setIsAddOpen,
     setIsDeleteOpen,
+    changeMonth,
+    openAdd,
+    openEdit,
+    openDelete,
     saveExpense,
     confirmDelete,
   } = useCalendar()
 
-  const days = new Date(
-    monthDate.getFullYear(),
-    monthDate.getMonth() + 1,
-    0
-  ).getDate()
+  const year = monthDate.getFullYear()
+  const month = String(monthDate.getMonth() + 1).padStart(2, '0')
 
   return (
     <Header
@@ -96,11 +94,8 @@ export default function Calendar() {
           </div>
 
           <div className="mt-2 grid grid-cols-7 gap-1.5">
-            {Array.from({ length: days }, (_, index) => {
-              const date = `${monthDate.getFullYear()}-${String(
-                monthDate.getMonth() + 1
-              ).padStart(2, '0')}-${String(index + 1).padStart(2, '0')}`
-              const total = dailyTotals[index] || 0
+            {dailyTotals.map((total, index) => {
+              const date = `${year}-${month}-${String(index + 1).padStart(2, '0')}`
               const isSelected = selectedDate === date
 
               return (
@@ -198,13 +193,13 @@ export default function Calendar() {
         </Card>
       </section>
 
-      {/* Add / Edit Expense Dialog */}
+      {/* Expense Dialog */}
       <ExpenseDialog
         open={isAddOpen}
         onOpenChange={setIsAddOpen}
         expense={editingExpense}
         categories={categories}
-        defaultDate={selectedDate}
+        defaultDate={defaultDate || selectedDate}
         onSave={saveExpense}
       />
 
