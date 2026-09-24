@@ -63,10 +63,10 @@ export default function Dashboard() {
       <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-end">
         <div>
           <p className={labelClass}>{todayFormatted}</p>
-          <h1 className="mt-1.5 font-display text-3xl font-extrabold tracking-tight text-emerald-950 md:text-4xl dark:text-amber-100">
+          <h1 className="mt-1.5 font-display md:text-3xl text-2xl font-extrabold tracking-tight text-emerald-950 md:text-4xl dark:text-amber-100">
             Good day, {displayName} <span className="text-amber-400">✦</span>
           </h1>
-          <p className="mt-1.5 text-sm text-slate-500 dark:text-emerald-200/70">
+          <p className="mt-1.5 md:text-sm text-xs text-slate-500 dark:text-emerald-200/70">
             Here’s how your household is doing this month.
           </p>
         </div>
