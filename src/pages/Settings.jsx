@@ -102,13 +102,13 @@ export default function Settings() {
             </div>
           </div>
 
-          <div className="mt-8 flex gap-3">
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <Button
               variant={!isDark ? 'default' : 'outline'}
               className={
                 !isDark
-                  ? 'h-11 px-5 py-2.5 rounded-xl bg-emerald-900 hover:bg-emerald-800 text-amber-200 border border-amber-400/30 font-semibold text-sm shadow-md'
-                  : 'h-11 px-5 py-2.5 rounded-xl border-emerald-900/20 dark:border-emerald-800/40 text-emerald-900 dark:text-amber-200 text-sm'
+                  ? 'h-11 w-full px-5 py-2.5 rounded-xl bg-emerald-900 hover:bg-emerald-800 text-amber-200 border border-amber-400/30 font-semibold text-sm shadow-md sm:w-auto'
+                  : 'h-11 w-full px-5 py-2.5 rounded-xl border-emerald-900/20 dark:border-emerald-800/40 text-emerald-900 dark:text-amber-200 text-sm sm:w-auto'
               }
               onClick={() => setIsDark(false)}
             >
@@ -120,8 +120,8 @@ export default function Settings() {
               variant={isDark ? 'default' : 'outline'}
               className={
                 isDark
-                  ? 'h-11 px-5 py-2.5 rounded-xl bg-emerald-900 hover:bg-emerald-800 text-amber-200 border border-amber-400/30 font-semibold text-sm shadow-md'
-                  : 'h-11 px-5 py-2.5 rounded-xl border-emerald-900/20 dark:border-emerald-800/40 text-emerald-900 dark:text-amber-200 text-sm'
+                  ? 'h-11 w-full px-5 py-2.5 rounded-xl bg-emerald-900 hover:bg-emerald-800 text-amber-200 border border-amber-400/30 font-semibold text-sm shadow-md sm:w-auto'
+                  : 'h-11 w-full px-5 py-2.5 rounded-xl border-emerald-900/20 dark:border-emerald-800/40 text-emerald-900 dark:text-amber-200 text-sm sm:w-auto'
               }
               onClick={() => setIsDark(true)}
             >
