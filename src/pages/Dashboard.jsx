@@ -3,6 +3,7 @@ import { Button } from '@/ui/button'
 import { Card } from '@/ui/card'
 import ExpenseDialog from '../components/ExpenseDialog'
 import DeleteConfirmDialog from '../components/DeleteConfirmDialog'
+import CategoryIcon from '../components/CategoryIcon'
 import { useDashboard } from '../hooks/useDashboard'
 import { money } from '../utils/formatters'
 
@@ -213,9 +214,11 @@ export default function Dashboard() {
             {categoryTotals.length ? (
               categoryTotals.map((category) => (
                 <div className="flex items-center gap-3" key={category.name}>
-                  <div className="grid size-9 place-items-center rounded-lg bg-emerald-50 text-emerald-800 dark:bg-emerald-950/80 dark:text-amber-300 shrink-0 border border-emerald-900/10 dark:border-emerald-800/30">
-                    <WalletCards size={17} />
-                  </div>
+                  <CategoryIcon
+                    category={category.name}
+                    size={17}
+                    containerClassName="size-9 rounded-lg"
+                  />
                   <div className="min-w-0 flex-1">
                     <div className="flex justify-between gap-3 text-xs">
                       <span className="truncate font-medium text-emerald-950 dark:text-emerald-100">
@@ -398,9 +401,11 @@ function CalendarGrid({ monthDate, dailyTotals, selectedDate, setSelectedDate })
 function ExpenseRow({ expense, onEdit, onDelete }) {
   return (
     <div className="group flex items-center gap-3 border-b border-emerald-950/10 py-3 last:border-0 dark:border-emerald-900/30">
-      <div className="grid size-9 place-items-center rounded-lg bg-emerald-50 text-emerald-800 dark:bg-emerald-950/80 dark:text-amber-300 shrink-0 border border-emerald-900/10 dark:border-emerald-800/30">
-        <WalletCards size={17} />
-      </div>
+      <CategoryIcon
+        category={expense.category}
+        size={17}
+        containerClassName="size-9 rounded-lg"
+      />
       <div className="min-w-0 flex-1">
         <strong className="block text-xs font-semibold text-emerald-950 dark:text-amber-100">
           {expense.category}
