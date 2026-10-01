@@ -5,6 +5,7 @@ import { Avatar, AvatarFallback } from '@/ui/avatar'
 import { Button } from '@/ui/button'
 import { useTheme } from '../hooks/useTheme'
 import { useAuth } from '../hooks/useAuth'
+import { ScrollArea } from '@/ui/scroll-area'
 
 export default function Layout() {
   const { pathname } = useLocation()
@@ -68,10 +69,12 @@ export default function Layout() {
           </div>
         </header>
 
-        {/* Scrollable Main Content Area */}
-        <main className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden p-4 md:p-10 pb-24 md:pb-12 scroll-smooth">
-          <Outlet />
-        </main>
+        {/* Scrollable Main Content Area with Custom Scrollbar */}
+        <ScrollArea className="flex-1 min-h-0 size-full">
+          <main className="p-4 md:p-10 pb-24 md:pb-12">
+            <Outlet />
+          </main>
+        </ScrollArea>
       </div>
     </div>
   )

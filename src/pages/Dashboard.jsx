@@ -4,6 +4,7 @@ import { Card } from '@/ui/card'
 import ExpenseDialog from '../components/ExpenseDialog'
 import DeleteConfirmDialog from '../components/DeleteConfirmDialog'
 import CategoryIcon from '../components/CategoryIcon'
+import { ScrollArea } from '@/ui/scroll-area'
 import { useDashboard } from '../hooks/useDashboard'
 import { money } from '../utils/formatters'
 
@@ -156,41 +157,43 @@ export default function Dashboard() {
       </section>
 
       {/* Charts & Breakdown Row */}
-      <div className="grid gap-4 lg:grid-cols-[1.45fr_1fr]">
-        <Card className="p-5 bg-white dark:bg-[#0a2019] border-emerald-950/10 dark:border-emerald-900/30">
-          <PanelHeading label="Spending rhythm" title="Where your money goes">
-            <span className="text-xs text-emerald-800/60 dark:text-amber-400/70 font-semibold">
-              {monthLabel(monthDate)}
-            </span>
-          </PanelHeading>
-          <div className="mt-6 flex h-52 gap-3 border-b border-emerald-950/10 dark:border-emerald-900/30">
-            <div className="flex flex-col justify-between pb-5 text-[9px] text-emerald-800/50 dark:text-emerald-300/40">
-              <span>20k</span>
-              <span>10k</span>
-              <span>0</span>
-            </div>
-            <div className="flex flex-1 items-end justify-between gap-1 bg-[repeating-linear-gradient(to_bottom,transparent_0,transparent_67px,rgba(6,78,59,0.04)_68px)] px-1">
-              {dailyTotals.map((total, index) => (
-                <div
-                  className="flex h-full flex-1 flex-col items-center justify-end gap-1.5"
-                  key={index}
-                >
+      <div className="grid gap-4 lg:grid-cols-[1.45fr_1fr] items-stretch">
+        <Card className="flex flex-col justify-between p-5 bg-white dark:bg-[#0a2019] border-emerald-950/10 dark:border-emerald-900/30 h-full">
+          <div>
+            <PanelHeading label="Spending rhythm" title="Where your money goes">
+              <span className="text-xs text-emerald-800/60 dark:text-amber-400/70 font-semibold">
+                {monthLabel(monthDate)}
+              </span>
+            </PanelHeading>
+            <div className="mt-6 flex h-[300px] flex-1 gap-3 border-b border-emerald-950/10 dark:border-emerald-900/30">
+              <div className="flex flex-col justify-between pb-5 text-[9px] text-emerald-800/50 dark:text-emerald-300/40">
+                <span>20k</span>
+                <span>10k</span>
+                <span>0</span>
+              </div>
+              <div className="flex flex-1 items-end justify-between gap-1 bg-[repeating-linear-gradient(to_bottom,transparent_0,transparent_67px,rgba(6,78,59,0.04)_68px)] px-1">
+                {dailyTotals.map((total, index) => (
                   <div
-                    className={`min-h-1 w-1.5 rounded-t transition-all ${total
-                      ? 'bg-gradient-to-t from-amber-600 to-amber-400 shadow-sm'
-                      : 'bg-emerald-950/10 dark:bg-emerald-950/40'
-                      } sm:w-3`}
-                    style={{ height: `${Math.max(3, (total / maxDaily) * 100)}%` }}
-                    title={`${index + 1} ${monthLabel(monthDate).split(' ')[0]} · ${money(total)}`}
-                  />
-                  {[0, 6, 13, 20, 27, dailyTotals.length - 1].includes(index) && (
-                    <span className="text-[9px] text-emerald-800/60 dark:text-emerald-300/50">{index + 1}</span>
-                  )}
-                </div>
-              ))}
+                    className="flex h-full flex-1 flex-col items-center justify-end gap-1.5"
+                    key={index}
+                  >
+                    <div
+                      className={`min-h-1 w-1.5 rounded-t transition-all ${total
+                        ? 'bg-gradient-to-t from-amber-600 to-amber-400 shadow-sm'
+                        : 'bg-emerald-950/10 dark:bg-emerald-950/40'
+                        } sm:w-3`}
+                      style={{ height: `${Math.max(3, (total / maxDaily) * 100)}%` }}
+                      title={`${index + 1} ${monthLabel(monthDate).split(' ')[0]} · ${money(total)}`}
+                    />
+                    {[0, 6, 13, 20, 27, dailyTotals.length - 1].includes(index) && (
+                      <span className="text-[9px] text-emerald-800/60 dark:text-emerald-300/50">{index + 1}</span>
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
-          <div className="mt-3 flex justify-between text-[11px] text-emerald-800/70 dark:text-emerald-300/60">
+          <div className="mt-3 flex justify-between text-[11px] text-emerald-800/70 dark:text-emerald-300/60 pt-2">
             <span className="inline-flex items-center gap-1.5">
               <i className="inline-block size-2 rounded-full bg-amber-500" />
               Daily spending
@@ -204,48 +207,56 @@ export default function Dashboard() {
           </div>
         </Card>
 
-        <Card className="p-5 bg-white dark:bg-[#0a2019] border-emerald-950/10 dark:border-emerald-900/30">
+        <Card className="flex flex-col p-5 bg-white dark:bg-[#0a2019] border-emerald-950/10 dark:border-emerald-900/30 h-full">
           <PanelHeading label="By category" title="Biggest buckets">
-            <Button variant="ghost" size="icon-sm" className="text-emerald-800 dark:text-amber-300">
-              <Ellipsis size={18} />
-            </Button>
+            <span className="text-[11px] font-semibold text-emerald-800/70 dark:text-amber-400/80">
+              {categoryTotals.length} {categoryTotals.length === 1 ? 'category' : 'categories'}
+            </span>
           </PanelHeading>
-          <div className="mt-6 space-y-4">
-            {categoryTotals.length ? (
-              categoryTotals.map((category) => (
-                <div className="flex items-center gap-3" key={category.name}>
-                  <CategoryIcon
-                    category={category.name}
-                    size={17}
-                    containerClassName="size-9 rounded-lg"
-                  />
-                  <div className="min-w-0 flex-1">
-                    <div className="flex justify-between gap-3 text-xs">
-                      <span className="truncate font-medium text-emerald-950 dark:text-emerald-100">
-                        {category.name}
-                      </span>
-                      <b className="font-semibold text-emerald-950 dark:text-amber-200">
-                        {money(category.total)}
-                      </b>
-                    </div>
-                    <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-emerald-950/10 dark:bg-emerald-950/50">
-                      <span
-                        className="block h-full rounded-full transition-all duration-500 shadow-sm"
-                        style={{
-                          width: `${Math.max(8, (category.total / Math.max(spent, 1)) * 100)}%`,
-                          background: category.color,
-                        }}
-                      />
+
+          {categoryTotals.length ? (
+            <ScrollArea className="mt-5 flex-1 h-[300px] pr-3">
+              <div className="space-y-3.5">
+                {categoryTotals.map((category) => (
+                  <div className="flex items-center gap-3" key={category.name}>
+                    <CategoryIcon
+                      category={category.name}
+                      size={17}
+                      containerClassName="size-9 rounded-lg"
+                    />
+                    <div className="min-w-0 flex-1">
+                      <div className="flex justify-between gap-3 text-xs">
+                        <span className="truncate font-medium text-emerald-950 dark:text-emerald-100">
+                          {category.name}
+                        </span>
+                        <b className="font-semibold text-emerald-950 dark:text-amber-200">
+                          {money(category.total)}
+                        </b>
+                      </div>
+                      <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-emerald-950/10 dark:bg-emerald-950/50">
+                        <span
+                          className="block h-full rounded-full transition-all duration-500 shadow-sm"
+                          style={{
+                            width: `${Math.max(8, (category.total / Math.max(spent, 1)) * 100)}%`,
+                            background: category.color,
+                          }}
+                        />
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))
-            ) : (
-              <p className="py-8 text-center text-xs text-slate-400 dark:text-emerald-300/60">
+                ))}
+              </div>
+            </ScrollArea>
+          ) : (
+            <div className="flex-1 flex flex-col items-center justify-center min-h-[300px] text-center gap-2.5">
+              <div className="size-11 rounded-full bg-emerald-950/5 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-800/40 dark:text-amber-400/40">
+                <WalletCards size={22} />
+              </div>
+              <p className="text-xs text-slate-500 dark:text-emerald-300/60 max-w-[200px]">
                 No categorized spending this month
               </p>
-            )}
-          </div>
+            </div>
+          )}
         </Card>
       </div>
 
